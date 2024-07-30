@@ -102,9 +102,9 @@ class BotController extends Controller
         $text = "SAFO PHARM 2017 yilda tashkil etilgan bo'lib bugungi kunda Andijon viloyatida 6 ta filialiga ega va bu hali boshlanishi. Bizning rejalarimiz butun respublikamiz, MDH davlatlari va dunyoni qamrab olish. Bizning barcha sa'y-harakatlarimiz malakali va fidoyi jamoamizning sa'y-harakatlaridir. Jamoamiz o'sib bormoqda va biz 40 tadan oshdik. Bugungi kunda hech qanday mubolag'asiz aytishimiz mumkinki, har kuni minglab mijozlarga xizmat ko'rsatuvchi SAFO PHARM ishonchli va mashhur brendga aylandi. Mijozlarimizning ishonchi va sadoqati bizning katta yutug'imizdir.
         Biz har kuni o'zgarib, yaxshiroq va yanada yaxshiroq bo'lish uchun faol ishlaymiz. Bizdagi  afzalliklar tufayli biz muvaffaqiyatga erishishda davom etamiz,  bular - iste'molchilar bilan to'g'ridan-to'g'ri muloqot qilishning nostandart usullari, sifatli dori-darmonlarning keng assortimenti, qulay narx siyosati va marketing dasturlari bilan uyg'unlashgan xizmat ko'rsatishning yuqori standartlaridir.";
         $this->sendMessage($chatId, $text, $messageId);
-        // $btn = [[['text' => 'Yana kod kiritish!', 'request_contact' => true]]];
-        // $btnName = 'inline_keyboard';
-        // $this->sendMessageBtn($chatId,$text, $btn, $btnName, $messageId);
+        $btn = [[['text' => 'Yana kod kiritish!', 'request_contact' => true]]];
+        $btnName = 'inline_keyboard';
+        $this->sendMessageBtn($chatId,$text, $btn, $btnName, $messageId);
 
     }
     public function sendMessage($chatId, $text, $messageId)
