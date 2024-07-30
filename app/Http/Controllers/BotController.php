@@ -87,7 +87,7 @@ class BotController extends Controller
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($data == 'code') {
-            $this->sendOrder($chatId, $messageId, $user);
+            $this->sendOrder($chatId,false, $user, $messageId);
         }
     }
     public function start($chatId,$messageId, $user)
@@ -155,11 +155,12 @@ raqamingizni yuboring (masalan: +998931234567):',
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
-    public function sendOrder($chatId,$messageId,$user){
+    public function sendOrder($chatId, $text, $user, $messageId)
+    {
+        $message = "Himoya qatlami ostidagi 🎫 kodni kiriting";
         // $user->update([
-        //     'state'=>'await_order_quantity'
+        //     'state' => 'await_code',
         // ]);
-        $message = 'Buyurmangizni sonini kiriting! 📃 👇';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
     public function sendMessage($chatId, $text, $messageId, $user)
