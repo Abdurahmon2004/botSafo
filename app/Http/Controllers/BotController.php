@@ -88,10 +88,10 @@ class BotController extends Controller
 
     public function handleCallbackQuery($chatId, $data, $messageId)
     {
-        $user = UserWater::where('telegram_id',$chatId)->first();
-       if($data == 'order'){
-        $this->sendOrder($chatId,$messageId,$user);
-       }
+        // $user = UserWater::where('telegram_id', $chatId)->first();
+        if ($data == 'order') {
+            $this->sendOrder($chatId, $messageId);
+        }
     }
     public function start($chatId,$messageId, $user)
     {
@@ -157,12 +157,12 @@ raqamingizni yuboring (masalan: +998931234567):',
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
-    public function sendOrder($chatId,$messageId,$user){
-        $user->update([
-            'state'=>'await_order_quantity'
-        ]);
+    public function sendOrder($chatId,$messageId){
+        // $user->update([
+        //     'state'=>'await_order_quantity'
+        // ]);
         $message = 'Buyurmangizni sonini kiriting! 📃 👇';
-        $this->sendMessage($chatId, $message, $messageId, $user);
+        $this->sendMessage($chatId, $message, $messageId,true);
     }
     public function sendMessage($chatId, $text, $messageId, $user)
     {
