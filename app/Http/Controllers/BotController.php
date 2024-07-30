@@ -24,6 +24,10 @@ class BotController extends Controller
             }
 
             if ($chatId && $data) {
+              return  Telegram::sendMessage([
+                    'chat_id'=>$chatId,
+                    'text'=>$data
+                ]);
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
 
@@ -69,10 +73,7 @@ class BotController extends Controller
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($data == 'order') {
-            Telegram::sendMessage([
-                'chat_id'=>$chatId,
-                'text'=>'asasa',
-            ]);
+            $this->sendOrder($chatId, $messageId, $user);
         }
     }
 
