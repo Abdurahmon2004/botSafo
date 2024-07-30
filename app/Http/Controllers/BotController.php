@@ -73,7 +73,7 @@ class BotController extends Controller
         } else {
             switch ($text) {
                 case '/start':
-
+                    $this->start($chatId,$text,$messageId);
                     break;
             }
         }
