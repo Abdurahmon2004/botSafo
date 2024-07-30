@@ -25,14 +25,14 @@ class BotController extends Controller
             // if ($chatId && $data) {
             //     $this->handleCallbackQuery($chatId, $data, $messageId);
             // }
-            // if ($chatId && $contact) {
-            //     $user = UserWater::where('state','await_phone')->first();
-            //     if($user){
-            //         $this->savePhone($chatId,$contact,$messageId);
-            //     }else{
-            //         $this->handleMessage($chatId,'/start',$messageId);
-            //     }
-            // }
+            if ($chatId && $contact) {
+                $user = UserWater::where('state','await_phone')->first();
+                if($user){
+                    $this->savePhone($chatId,$contact,$messageId);
+                }else{
+                    $this->handleMessage($chatId,'/start',$messageId);
+                }
+            }
         }
     }
     public function handleMessage($chatId, $text, $messageId)
@@ -106,7 +106,7 @@ class BotController extends Controller
 
     }
 
-    public function savePhone($chatId, $contact, $messageId, $user)
+    public function savePhone($chatId,$contact,$messageId)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($contact) {
