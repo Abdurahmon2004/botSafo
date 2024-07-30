@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\UserWater;
@@ -12,6 +11,7 @@ class BotController extends Controller
     public function webhook()
     {
         $update = Telegram::getWebhookUpdates();
+
         if ($update) {
             $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
             $text = $update['message']['text'] ?? null;
@@ -22,28 +22,26 @@ class BotController extends Controller
             if ($chatId && $text) {
                 $this->handleMessage($chatId, $text, $messageId);
             }
-            if ($chatId && $data) {
-                Telegram::sendMessage([
 
-                ]);
+            if ($chatId && $data) {
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
-            if ($chatId && $contact) {
 
-                $user = UserWater::where('state','await_phone')->first();
-                if($user){
-                    $this->savePhone($chatId,$contact,false,$messageId, $user);
-                }else{
-                    $this->handleMessage($chatId,'/start',$messageId);
+            if ($chatId && $contact) {
+                $user = UserWater::where('state', 'await_phone')->first();
+                if ($user) {
+                    $this->savePhone($chatId, $contact, false, $messageId, $user);
+                } else {
+                    $this->handleMessage($chatId, '/start', $messageId);
                 }
             }
         }
     }
+
     public function handleMessage($chatId, $text, $messageId)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($user) {
-            // botga qayta start bosib yuborsa
             if ($text == '/start') {
                 switch ($user->state) {
                     case 'await_phone':
@@ -52,118 +50,105 @@ class BotController extends Controller
                     case 'await_order':
                         $this->savePhone($chatId, false, false, $messageId, $user);
                         break;
-                //     case 'await_region':
-                //         $this->savePhone($chatId, false, $messageId);
-                //         break;
-                //     case 'await_product':
-                //         $this->saveRegion($chatId, $user->region_id, false, $messageId);
-                //         break;
-                //     case 'await_code':
-                //         $this->Code($chatId, $text, $user, $messageId);
-                //         break;
-                //     case 'finish':
-                //         $this->finish($chatId, $user, $messageId);
-                //         break;
                 }
-            }
-
-            if ($text != '/start') {
+            } else {
                 switch ($user->state) {
                     case 'await_phone':
                         $this->savePhone($chatId, false, $text, $messageId, $user);
-                    break;
-                    // case 'await_order':
-                    //     $this->saveOrder($chatId, $text, $messageId, $user);
-                    // break;
+                        break;
                 }
             }
         } else {
-            switch ($text) {
-                case '/start':
-                    $this->start($chatId,$messageId, false);
-                    break;
+            if ($text == '/start') {
+                $this->start($chatId, $messageId, false);
             }
         }
     }
 
     public function handleCallbackQuery($chatId, $data, $messageId)
     {
-        // $user = UserWater::where('telegram_id', $chatId)->first();
+        $user = UserWater::where('telegram_id', $chatId)->first();
         if ($data == 'order') {
-            $this->sendOrder($chatId, $messageId);
+            $this->sendOrder($chatId, $messageId, $user);
         }
     }
-    public function start($chatId,$messageId, $user)
+
+    public function start($chatId, $messageId, $user)
     {
         $text = "Assalomu alaykum uzuuun tanishuv teksti";
         $this->sendMessage($chatId, $text, $messageId, $user);
+
         $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $message = 'Suvga buyurtma berish uchun
 "📱 Telefon raqamni yuborish" tugmasini bosing 👇
 Yoki raqamingizni kiriting (masalan: +998931234567):';
-        $this->sendMessageBtn($chatId,$message, $btn, $btnName, $messageId);
-
+        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
-    public function savePhone($chatId,$contact,$text,$messageId,$user)
+    public function savePhone($chatId, $contact, $text, $messageId, $user)
     {
         if ($contact) {
-            $phone = "+".substr($contact['phone_number'], -12);
-            if(preg_match("/^[+][0-9]+$/", $phone) && strlen($phone) == 13){
+            $phone = "+" . substr($contact['phone_number'], -12);
+            if (preg_match("/^[+][0-9]+$/", $phone) && strlen($phone) == 13) {
                 $user->update([
                     'phone' => $phone,
                     'state' => 'await_order',
                 ]);
-            }else{
-               return Telegram::sendMessage([
-                    'chat_id'=>$chatId,
-                    'text'=>'Sizning raqamingiz mahalliy raqam emas,
+            } else {
+                return Telegram::sendMessage([
+                    'chat_id' => $chatId,
+                    'text' => 'Sizning raqamingiz mahalliy raqam emas,
 📱 bog\'lanish mumkin bo\'lgan
 raqamingizni yuboring (masalan: +998931234567):',
                 ]);
             }
         }
 
-       if($text){
-        $text = "+".substr($text, -12);
-        if(preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13){
-            $user->update([
-                'phone' => $text,
-                'state' => 'await_order',
-            ]);
-        }else{
-            return Telegram::sendMessage([
-                'chat_id'=>$chatId,
-                'text'=>'📱 O`z telefon raqamingizni yuboring (masalan: +998931234567):',
-            ]);
+        if ($text) {
+            $text = "+" . substr($text, -12);
+            if (preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13) {
+                $user->update([
+                    'phone' => $text,
+                    'state' => 'await_order',
+                ]);
+            } else {
+                return Telegram::sendMessage([
+                    'chat_id' => $chatId,
+                    'text' => '📱 O`z telefon raqamingizni yuboring (masalan: +998931234567):',
+                ]);
+            }
         }
-       }
+
         $remove = Keyboard::make()->setRemoveKeyboard(true);
         Telegram::sendMessage([
-            'chat_id'=>$chatId,
-            'text'=>'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
-            'reply_markup' => $remove
+            'chat_id' => $chatId,
+            'text' => 'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
+            'reply_markup' => $remove,
         ]);
+
         $message = "Xayrli kun
         Men sizning shaxsiy yordamchi botingizman.
         Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va toza suvga buyurtma berishingiz mumkin 💧
         Yoki mahsulotlarimizni ko'ring📃 👇👇";
+
         $btn = [
-            [['text' => 'Buyurtma berish 👈', 'callback_data' =>'order']],
-            [['text'=> 'Biz haqimizda 👈', 'callback_data'=>'about']]
+            [['text' => 'Buyurtma berish 👈', 'callback_data' => 'order']],
+            [['text' => 'Biz haqimizda 👈', 'callback_data' => 'about']],
         ];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
-    public function sendOrder($chatId,$messageId){
-        // $user->update([
-        //     'state'=>'await_order_quantity'
-        // ]);
+    public function sendOrder($chatId, $messageId, $user)
+    {
+        $user->update([
+            'state' => 'await_order_quantity'
+        ]);
         $message = 'Buyurmangizni sonini kiriting! 📃 👇';
-        $this->sendMessage($chatId, $message, $messageId,true);
+        $this->sendMessage($chatId, $message, $messageId, $user);
     }
+
     public function sendMessage($chatId, $text, $messageId, $user)
     {
         if (!$user) {
@@ -172,6 +157,7 @@ raqamingizni yuboring (masalan: +998931234567):',
                 'state' => 'await_phone',
             ]);
         }
+
         try {
             $response = Telegram::editMessageText([
                 'chat_id' => $chatId,
