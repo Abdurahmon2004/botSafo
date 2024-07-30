@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\UserWater;
 use Illuminate\Http\Request;
+use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
 class BotController extends Controller
@@ -37,49 +38,45 @@ class BotController extends Controller
     public function handleMessage($chatId, $text, $messageId)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
-        $this->start($chatId, $messageId, $user);
-        // if ($user) {
-        //     // botga qayta start bosib yuborsa
-        //     // if ($text == '/start') {
-        //     //     switch ($user->state) {
-        //     //         case 'await_name':
-        //     //             $this->start($chatId, $messageId, $user);
-        //     //             break;
-        //     //         case 'await_phone':
-        //     //             $this->saveName($chatId, false, $messageId, $user);
-        //     //             break;
-        //     //         case 'await_region':
-        //     //             $this->savePhone($chatId, false, $messageId);
-        //     //             break;
-        //     //         case 'await_product':
-        //     //             $this->saveRegion($chatId, $user->region_id, false, $messageId);
-        //     //             break;
-        //     //         case 'await_code':
-        //     //             $this->Code($chatId, $text, $user, $messageId);
-        //     //             break;
-        //     //         case 'finish':
-        //     //             $this->finish($chatId, $user, $messageId);
-        //     //             break;
-        //     //     }
-        //     // }
+        if ($user) {
+            // botga qayta start bosib yuborsa
+            if ($text == '/start') {
+                // switch ($user->state) {
+                //     case 'await_name':
+                //         $this->start($chatId, $messageId, $user);
+                //         break;
+                //     case 'await_phone':
+                //         $this->saveName($chatId, false, $messageId, $user);
+                //         break;
+                //     case 'await_region':
+                //         $this->savePhone($chatId, false, $messageId);
+                //         break;
+                //     case 'await_product':
+                //         $this->saveRegion($chatId, $user->region_id, false, $messageId);
+                //         break;
+                //     case 'await_code':
+                //         $this->Code($chatId, $text, $user, $messageId);
+                //         break;
+                //     case 'finish':
+                //         $this->finish($chatId, $user, $messageId);
+                //         break;
+                // }
+            }
 
-        // //     if ($text != '/start') {
-        // //         switch ($user->state) {
-        // //             case 'await_name':
-        // //                 $this->saveName($chatId, $text, $messageId, $user);
-        // //                 break;
-        // //             case 'await_code':
-        // //                 $this->codeSave($chatId, $text, $messageId, $user);
-        // //                 break;
-        // //         }
-        // //     }
-        // // } else {
-        //     switch ($text) {
-        //         case '/start':
+            if ($text != '/start') {
+                switch ($user->state) {
+                    case 'await_phone':
+                        $this->savePhone($chatId, $text, $messageId, $user);
+                        break;
+                }
+            }
+        } else {
+            switch ($text) {
+                case '/start':
 
-        //             break;
-        //     }
-        // }
+                    break;
+            }
+        }
     }
 
     // public function handleCallbackQuery($chatId, $data, $messageId)
@@ -108,6 +105,34 @@ class BotController extends Controller
         $this->sendMessageBtn($chatId,$message, $btn, $btnName, $messageId);
 
     }
+
+    public function savePhone($chatId, $contact, $messageId, $user)
+    {
+        $user = UserWater::where('telegram_id', $chatId)->first();
+        if ($contact) {
+            $user->update([
+                'phone' => $contact['phone_number'],
+                'state' => 'await_order',
+            ]);
+        }
+        $remove = Keyboard::make()->setRemoveKeyboard(true);
+        Telegram::sendMessage([
+            'chat_id'=>$chatId,
+            'text'=>'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
+            'reply_markup' => $remove
+        ]);
+        $message = "Xayrli kun
+        Men sizning shaxsiy yordamchi botingizman.
+        Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va toza suvga buyurtma berishingiz mumkin 💧
+        Yoki mahsulotlarimizni ko'ring📃 👇👇";
+        $btn = [
+            [['text' => 'Buyurtma berish 👈', 'callback_data' => 'order']],
+            [['text'=> 'Biz haqimizda 👈', 'callback_data'=>'about']]
+        ];
+        $btnName = 'inline_keyboard';
+        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
+    }
+
     public function sendMessage($chatId, $text, $messageId)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
