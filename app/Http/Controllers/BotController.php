@@ -41,13 +41,13 @@ class BotController extends Controller
         if ($user) {
             // botga qayta start bosib yuborsa
             if ($text == '/start') {
-                // switch ($user->state) {
-                //     case 'await_name':
-                //         $this->start($chatId, $messageId, $user);
-                //         break;
-                //     case 'await_phone':
-                //         $this->saveName($chatId, false, $messageId, $user);
-                //         break;
+                switch ($user->state) {
+                    case 'await_phone':
+                        $this->start($chatId, $messageId, $user);
+                        break;
+                    case 'await_order':
+                        $this->savePhone($chatId, false, $messageId);
+                        break;
                 //     case 'await_region':
                 //         $this->savePhone($chatId, false, $messageId);
                 //         break;
@@ -60,13 +60,13 @@ class BotController extends Controller
                 //     case 'finish':
                 //         $this->finish($chatId, $user, $messageId);
                 //         break;
-                // }
+                }
             }
 
             if ($text != '/start') {
                 switch ($user->state) {
                     case 'await_phone':
-                        $this->savePhone($chatId, $text, $messageId, $user);
+                        $this->savePhone($chatId, $text, $messageId);
                     break;
                 }
             }
