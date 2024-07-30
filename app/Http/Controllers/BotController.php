@@ -123,7 +123,7 @@ raqamingizni yuboring (masalan: +998931234567):',
             }
         }
        if($text){
-        $text = "+".substr($contact['phone_number'], -12);
+        $text = "+".substr($text, -12);
         if(preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13){
             $user->update([
                 'phone' => $text,
