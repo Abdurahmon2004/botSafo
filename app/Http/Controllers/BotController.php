@@ -76,7 +76,7 @@ class BotController extends Controller
         } else {
             switch ($text) {
                 case '/start':
-                    $this->start($chatId,$text,$messageId);
+                    $this->start($chatId,$messageId, false);
                     break;
             }
         }
@@ -91,7 +91,7 @@ class BotController extends Controller
             break;
         }
     }
-    public function start($chatId, $messageId, $user)
+    public function start($chatId,$messageId, $user)
     {
         $text = "Assalomu alaykum uzuuun tanishuv teksti";
         $this->sendMessage($chatId, $text, $messageId, $user);
