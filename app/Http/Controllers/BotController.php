@@ -67,7 +67,7 @@ class BotController extends Controller
                 switch ($user->state) {
                     case 'await_phone':
                         $this->savePhone($chatId, $text, $messageId, $user);
-                        break;
+                    break;
                 }
             }
         } else {
@@ -139,7 +139,7 @@ class BotController extends Controller
         if (!$user) {
             UserWater::create([
                 'telegram_id' => $chatId,
-                'state' => 'await_name',
+                'state' => 'await_phone',
             ]);
         }
         try {
