@@ -114,7 +114,7 @@ Yoki raqamingizni kiriting (masalan: +998931234567):';
                     'state' => 'await_order',
                 ]);
             }else{
-                Telegram::sendMessage([
+               return Telegram::sendMessage([
                     'chat_id'=>$chatId,
                     'text'=>'Sizning raqamingiz mahalliy raqam emas,
 📱 bog\'lanish mumkin bo\'lgan
@@ -129,7 +129,7 @@ raqamingizni yuboring (masalan: +998931234567):',
                 'state' => 'await_order',
             ]);
         }else{
-            Telegram::sendMessage([
+            return Telegram::sendMessage([
                 'chat_id'=>$chatId,
                 'text'=>'📱 O`z telefon raqamingizni yuboring (masalan: +998931234567):',
             ]);
