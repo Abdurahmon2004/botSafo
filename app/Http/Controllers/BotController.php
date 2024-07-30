@@ -110,11 +110,7 @@ Yoki raqamingizni kiriting (masalan: +998931234567):';
     {
         if ($contact) {
             $phone = "+".substr($contact['phone_number'], -12);
-            return Telegram::sendMessage([
-                'chat_id'=>$chatId,
-                'text'=>$phone
-            ]);
-            if(preg_match("/^[+][0-9]+$/", $contact['phone_number']) && strlen($contact['phone_number']) == 13){
+            if(preg_match("/^[+][0-9]+$/", $phone) && strlen($phone) == 13){
                 $user->update([
                     'phone' => $phone,
                     'state' => 'await_order',
