@@ -29,10 +29,7 @@ class BotController extends Controller
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
             if ($chatId && $contact) {
-                return Telegram::sendMessage([
-                    'chat_id'=>$chatId,
-                    'text'=>$contact['phone_number']
-                ]);
+
                 $user = UserWater::where('state','await_phone')->first();
                 if($user){
                     $this->savePhone($chatId,$contact,false,$messageId, $user);
@@ -113,6 +110,10 @@ Yoki raqamingizni kiriting (masalan: +998931234567):';
     {
         if ($contact) {
             $phone = "+".substr($contact['phone_number'], -12);
+            return Telegram::sendMessage([
+                'chat_id'=>$chatId,
+                'text'=>$phone
+            ]);
             if(preg_match("/^[+][0-9]+$/", $contact['phone_number']) && strlen($contact['phone_number']) == 13){
                 $user->update([
                     'phone' => $phone,
@@ -127,6 +128,7 @@ raqamingizni yuboring (masalan: +998931234567):',
                 ]);
             }
         }
+
        if($text){
         $text = "+".substr($text, -12);
         if(preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13){
