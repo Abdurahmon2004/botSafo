@@ -23,9 +23,6 @@ class BotController extends Controller
                 $this->handleMessage($chatId, $text, $messageId);
             }
             if ($chatId && $data) {
-                Telegram::sendMessage([
-
-                ]);
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
             if ($chatId && $contact) {
