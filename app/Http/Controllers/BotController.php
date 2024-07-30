@@ -18,16 +18,15 @@ class BotController extends Controller
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
-
+            return Telegram::sendMessage([
+                'chat_id'=>$chatId,
+                'text'=>$data
+            ]);
             if ($chatId && $text) {
                 $this->handleMessage($chatId, $text, $messageId);
             }
 
             if ($chatId && $data) {
-              return  Telegram::sendMessage([
-                    'chat_id'=>$chatId,
-                    'text'=>$data
-                ]);
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
 
