@@ -108,7 +108,7 @@ Yoki raqamingizni kiriting (masalan: +998931234567):';
     {
         if ($contact) {
             $phone = "+".substr($contact['phone_number'], -12);
-            if(preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13){
+            if(preg_match("/^[+][0-9]+$/", $contact['phone_number']) && strlen($contact['phone_number']) == 13){
                 $user->update([
                     'phone' => $phone,
                     'state' => 'await_order',
