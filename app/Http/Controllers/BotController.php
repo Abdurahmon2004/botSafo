@@ -97,7 +97,8 @@ class BotController extends Controller
         $this->sendMessage($chatId, $text, $messageId, $user);
         $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
         $btnName = 'keyboard';
-        $message = 'Suvga zakaz berish uchun pastda paydo bolgan tugmani bosing';
+        $message = 'Suvga buyurtma berish uchun
+"Telefon raqamni yuborish" tugmasini bosing 👇';
         $this->sendMessageBtn($chatId,$message, $btn, $btnName, $messageId);
 
     }
