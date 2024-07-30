@@ -23,9 +23,16 @@ class BotController extends Controller
                 $this->handleMessage($chatId, $text, $messageId);
             }
             if ($chatId && $data) {
+                Telegram::sendMessage([
+
+                ]);
                 $this->handleCallbackQuery($chatId, $data, $messageId);
             }
             if ($chatId && $contact) {
+                return Telegram::sendMessage([
+                    'chat_id'=>$chatId,
+                    'text'=>$contact['phone_number']
+                ]);
                 $user = UserWater::where('state','await_phone')->first();
                 if($user){
                     $this->savePhone($chatId,$contact,false,$messageId, $user);
@@ -145,7 +152,7 @@ raqamingizni yuboring (masalan: +998931234567):',
         Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va toza suvga buyurtma berishingiz mumkin 💧
         Yoki mahsulotlarimizni ko'ring📃 👇👇";
         $btn = [
-            [['text' => 'Buyurtma berish 👈', 'callback_data' => 'order']],
+            [['text' => 'Buyurtma berish 👈', 'callback_data' =>'order']],
             [['text'=> 'Biz haqimizda 👈', 'callback_data'=>'about']]
         ];
         $btnName = 'inline_keyboard';
