@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->string('telegram_id')->nullable();
             $table->text('comment')->nullable();
+            $table->string('state')->nullable();
             $table->string('social')->nullable();
-            $table->string('sociall')->nullable();
             $table->timestamps();
         });
     }
