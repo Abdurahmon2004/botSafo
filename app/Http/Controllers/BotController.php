@@ -69,7 +69,10 @@ class BotController extends Controller
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($data == 'order') {
-            $this->sendOrder($chatId, $messageId, $user);
+            Telegram::sendMessage([
+                'chat_id'=>$chatId,
+                'text'=>'asasa',
+            ]);
         }
     }
 
