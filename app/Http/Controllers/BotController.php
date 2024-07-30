@@ -28,7 +28,7 @@ class BotController extends Controller
             if ($chatId && $contact) {
                 $user = UserWater::where('state','await_phone')->first();
                 if($user){
-                    $this->savePhone($chatId,$contact,$messageId, $user);
+                    $this->savePhone($chatId,$contact,false,$messageId, $user);
                 }else{
                     $this->handleMessage($chatId,'/start',$messageId);
                 }
@@ -40,37 +40,37 @@ class BotController extends Controller
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($user) {
             // botga qayta start bosib yuborsa
-            if ($text == '/start') {
-                switch ($user->state) {
-                    case 'await_phone':
-                        $this->start($chatId, $messageId, $user);
-                        break;
-                    case 'await_order':
-                        $this->savePhone($chatId, false, $messageId, $user);
-                        break;
-                //     case 'await_region':
-                //         $this->savePhone($chatId, false, $messageId);
-                //         break;
-                //     case 'await_product':
-                //         $this->saveRegion($chatId, $user->region_id, false, $messageId);
-                //         break;
-                //     case 'await_code':
-                //         $this->Code($chatId, $text, $user, $messageId);
-                //         break;
-                //     case 'finish':
-                //         $this->finish($chatId, $user, $messageId);
-                //         break;
-                }
-            }
+            // if ($text == '/start') {
+            //     switch ($user->state) {
+            //         case 'await_phone':
+            //             $this->start($chatId, $messageId, $user);
+            //             break;
+            //         case 'await_order':
+            //             $this->savePhone($chatId, false, false, $messageId, $user);
+            //             break;
+            //     //     case 'await_region':
+            //     //         $this->savePhone($chatId, false, $messageId);
+            //     //         break;
+            //     //     case 'await_product':
+            //     //         $this->saveRegion($chatId, $user->region_id, false, $messageId);
+            //     //         break;
+            //     //     case 'await_code':
+            //     //         $this->Code($chatId, $text, $user, $messageId);
+            //     //         break;
+            //     //     case 'finish':
+            //     //         $this->finish($chatId, $user, $messageId);
+            //     //         break;
+            //     }
+            // }
 
             if ($text != '/start') {
                 switch ($user->state) {
                     case 'await_phone':
-                        $this->savePhone($chatId, $text, $messageId, $user);
+                        $this->savePhone($chatId, false, $text, $messageId, $user);
                     break;
-                    case 'await_order':
-                        $this->saveOrder($chatId, $text, $messageId, $user);
-                    break;
+                    // case 'await_order':
+                    //     $this->saveOrder($chatId, $text, $messageId, $user);
+                    // break;
                 }
             }
         } else {
@@ -103,14 +103,23 @@ class BotController extends Controller
 
     }
 
-    public function savePhone($chatId,$contact,$messageId,$user)
+    public function savePhone($chatId,$contact,$text,$messageId,$user)
     {
         if ($contact) {
+            $phone = "+".substr($contact['phone_number'], -12);
             $user->update([
-                'phone' => $contact['phone_number'],
+                'phone' => $phone,
                 'state' => 'await_order',
             ]);
         }
+       if($text){
+        if(preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13){
+            $user->update([
+                'phone' => $text,
+                'state' => 'await_order',
+            ]);
+        }
+       }
         $remove = Keyboard::make()->setRemoveKeyboard(true);
         Telegram::sendMessage([
             'chat_id'=>$chatId,
