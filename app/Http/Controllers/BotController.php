@@ -103,8 +103,9 @@ class BotController extends Controller
         Biz har kuni o'zgarib, yaxshiroq va yanada yaxshiroq bo'lish uchun faol ishlaymiz. Bizdagi  afzalliklar tufayli biz muvaffaqiyatga erishishda davom etamiz,  bular - iste'molchilar bilan to'g'ridan-to'g'ri muloqot qilishning nostandart usullari, sifatli dori-darmonlarning keng assortimenti, qulay narx siyosati va marketing dasturlari bilan uyg'unlashgan xizmat ko'rsatishning yuqori standartlaridir.";
         $this->sendMessage($chatId, $text, $messageId);
         $btn = [[['text' => 'Yana kod kiritish!', 'request_contact' => true]]];
-        $btnName = 'inline_keyboard';
-        $this->sendMessageBtn($chatId,$text, $btn, $btnName, $messageId);
+        $btnName = 'keyboard';
+        $message = 'Suvga zakaz berish uchun pastda paydo bolgan tugmani bosing';
+        $this->sendMessageBtn($chatId,$message, $btn, $btnName, $messageId);
 
     }
     public function sendMessage($chatId, $text, $messageId)
