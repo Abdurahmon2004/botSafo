@@ -150,7 +150,7 @@ raqamingizni yuboring (masalan: +998931234567):',
         Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va toza suvga buyurtma berishingiz mumkin 💧
         Yoki mahsulotlarimizni ko'ring📃 👇👇";
         $btn = [
-            [['text' => 'Buyurtma berish 👈', 'callback_data' =>'order']],
+            [['text' => 'Buyurtma berish 👈', 'url' =>'https://t.me/salomtvuztarjima']],
             [['text'=> 'Biz haqimizda 👈', 'callback_data'=>'about']]
         ];
         $btnName = 'inline_keyboard';
