@@ -40,28 +40,28 @@ class BotController extends Controller
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($user) {
             // botga qayta start bosib yuborsa
-            // if ($text == '/start') {
-            //     switch ($user->state) {
-            //         case 'await_phone':
-            //             $this->start($chatId, $messageId, $user);
-            //             break;
-            //         case 'await_order':
-            //             $this->savePhone($chatId, false, false, $messageId, $user);
-            //             break;
-            //     //     case 'await_region':
-            //     //         $this->savePhone($chatId, false, $messageId);
-            //     //         break;
-            //     //     case 'await_product':
-            //     //         $this->saveRegion($chatId, $user->region_id, false, $messageId);
-            //     //         break;
-            //     //     case 'await_code':
-            //     //         $this->Code($chatId, $text, $user, $messageId);
-            //     //         break;
-            //     //     case 'finish':
-            //     //         $this->finish($chatId, $user, $messageId);
-            //     //         break;
-            //     }
-            // }
+            if ($text == '/start') {
+                switch ($user->state) {
+                    case 'await_phone':
+                        $this->start($chatId, $messageId, $user);
+                        break;
+                    case 'await_order':
+                        $this->savePhone($chatId, false, false, $messageId, $user);
+                        break;
+                //     case 'await_region':
+                //         $this->savePhone($chatId, false, $messageId);
+                //         break;
+                //     case 'await_product':
+                //         $this->saveRegion($chatId, $user->region_id, false, $messageId);
+                //         break;
+                //     case 'await_code':
+                //         $this->Code($chatId, $text, $user, $messageId);
+                //         break;
+                //     case 'finish':
+                //         $this->finish($chatId, $user, $messageId);
+                //         break;
+                }
+            }
 
             if ($text != '/start') {
                 switch ($user->state) {
@@ -87,7 +87,7 @@ class BotController extends Controller
         $user = UserWater::where('telegram_id',$chatId)->first();
         switch ($data) {
             case 'order':
-                $this->SendOrder($chatId,$messageId,$user);
+                $this->sendOrder($chatId,$messageId,$user);
             break;
         }
     }
@@ -154,11 +154,11 @@ raqamingizni yuboring (masalan: +998931234567):',
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
-    public function SendOrder($chatId,$messageId,$user){
-        $message = 'Buyurmangizni sonini kiriting! 📃 👇';
+    public function sendOrder($chatId,$messageId,$user){
         $user->update([
-            'state'=>'await_order_count'
+            'state'=>'await_order_quantity'
         ]);
+        $message = 'Buyurmangizni sonini kiriting! 📃 👇';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
     public function sendMessage($chatId, $text, $messageId, $user)
