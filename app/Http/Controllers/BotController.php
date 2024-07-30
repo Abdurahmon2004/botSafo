@@ -98,7 +98,8 @@ class BotController extends Controller
         $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $message = 'Suvga buyurtma berish uchun
-"Telefon raqamni yuborish" tugmasini bosing 👇';
+"📱 Telefon raqamni yuborish" tugmasini bosing 👇
+Yoki raqamingizni kiriting (masalan: +998931234567):';
         $this->sendMessageBtn($chatId,$message, $btn, $btnName, $messageId);
 
     }
@@ -107,16 +108,30 @@ class BotController extends Controller
     {
         if ($contact) {
             $phone = "+".substr($contact['phone_number'], -12);
-            $user->update([
-                'phone' => $phone,
-                'state' => 'await_order',
-            ]);
+            if(preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13){
+                $user->update([
+                    'phone' => $phone,
+                    'state' => 'await_order',
+                ]);
+            }else{
+                Telegram::sendMessage([
+                    'chat_id'=>$chatId,
+                    'text'=>'Sizning raqamingiz mahalliy raqam emas,
+📱 bog\'lanish mumkin bo\'lgan
+raqamingizni yuboring (masalan: +998931234567):',
+                ]);
+            }
         }
        if($text){
         if(preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13){
             $user->update([
                 'phone' => $text,
                 'state' => 'await_order',
+            ]);
+        }else{
+            Telegram::sendMessage([
+                'chat_id'=>$chatId,
+                'text'=>'📱 O`z telefon raqamingizni yuboring (masalan: +998931234567):',
             ]);
         }
        }
