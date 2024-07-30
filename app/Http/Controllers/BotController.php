@@ -37,48 +37,49 @@ class BotController extends Controller
     public function handleMessage($chatId, $text, $messageId)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
-        if ($user) {
-            // botga qayta start bosib yuborsa
-            // if ($text == '/start') {
-            //     switch ($user->state) {
-            //         case 'await_name':
-            //             $this->start($chatId, $messageId, $user);
-            //             break;
-            //         case 'await_phone':
-            //             $this->saveName($chatId, false, $messageId, $user);
-            //             break;
-            //         case 'await_region':
-            //             $this->savePhone($chatId, false, $messageId);
-            //             break;
-            //         case 'await_product':
-            //             $this->saveRegion($chatId, $user->region_id, false, $messageId);
-            //             break;
-            //         case 'await_code':
-            //             $this->Code($chatId, $text, $user, $messageId);
-            //             break;
-            //         case 'finish':
-            //             $this->finish($chatId, $user, $messageId);
-            //             break;
-            //     }
-            // }
+        $this->start($chatId, $messageId, $user);
+        // if ($user) {
+        //     // botga qayta start bosib yuborsa
+        //     // if ($text == '/start') {
+        //     //     switch ($user->state) {
+        //     //         case 'await_name':
+        //     //             $this->start($chatId, $messageId, $user);
+        //     //             break;
+        //     //         case 'await_phone':
+        //     //             $this->saveName($chatId, false, $messageId, $user);
+        //     //             break;
+        //     //         case 'await_region':
+        //     //             $this->savePhone($chatId, false, $messageId);
+        //     //             break;
+        //     //         case 'await_product':
+        //     //             $this->saveRegion($chatId, $user->region_id, false, $messageId);
+        //     //             break;
+        //     //         case 'await_code':
+        //     //             $this->Code($chatId, $text, $user, $messageId);
+        //     //             break;
+        //     //         case 'finish':
+        //     //             $this->finish($chatId, $user, $messageId);
+        //     //             break;
+        //     //     }
+        //     // }
 
-        //     if ($text != '/start') {
-        //         switch ($user->state) {
-        //             case 'await_name':
-        //                 $this->saveName($chatId, $text, $messageId, $user);
-        //                 break;
-        //             case 'await_code':
-        //                 $this->codeSave($chatId, $text, $messageId, $user);
-        //                 break;
-        //         }
+        // //     if ($text != '/start') {
+        // //         switch ($user->state) {
+        // //             case 'await_name':
+        // //                 $this->saveName($chatId, $text, $messageId, $user);
+        // //                 break;
+        // //             case 'await_code':
+        // //                 $this->codeSave($chatId, $text, $messageId, $user);
+        // //                 break;
+        // //         }
+        // //     }
+        // // } else {
+        //     switch ($text) {
+        //         case '/start':
+
+        //             break;
         //     }
-        // } else {
-            switch ($text) {
-                case '/start':
-                    $this->start($chatId, $messageId, $user);
-                    break;
-            }
-        }
+        // }
     }
 
     // public function handleCallbackQuery($chatId, $data, $messageId)
