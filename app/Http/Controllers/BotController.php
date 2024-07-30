@@ -89,7 +89,7 @@ class BotController extends Controller
     public function handleCallbackQuery($chatId, $data, $messageId)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
-        if ($data == 'order') {
+        if ($data == 'code') {
             $this->sendOrder($chatId, $messageId, $user);
         }
     }
@@ -150,7 +150,8 @@ raqamingizni yuboring (masalan: +998931234567):',
         Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va toza suvga buyurtma berishingiz mumkin 💧
         Yoki mahsulotlarimizni ko'ring📃 👇👇";
         $btn = [
-            [['text' => 'Buyurtma berish 👈', 'url' =>'https://t.me/salomtvuztarjima']],
+            [['text' => 'Buyurtma berish 👈', 'callback_data' =>'order']],
+            [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
             [['text'=> 'Biz haqimizda 👈', 'callback_data'=>'about']]
         ];
         $btnName = 'inline_keyboard';
@@ -158,9 +159,9 @@ raqamingizni yuboring (masalan: +998931234567):',
     }
 
     public function sendOrder($chatId,$messageId,$user){
-        $user->update([
-            'state'=>'await_order_quantity'
-        ]);
+        // $user->update([
+        //     'state'=>'await_order_quantity'
+        // ]);
         $message = 'Buyurmangizni sonini kiriting! 📃 👇';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
