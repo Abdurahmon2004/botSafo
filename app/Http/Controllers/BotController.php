@@ -44,31 +44,11 @@ class BotController extends Controller
     public function handleMessage($chatId, $text, $messageId)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
+        if ($text == '/start') {
+            $this->start($chatId, $messageId, $user);
+        }
         if ($user) {
             // botga qayta start bosib yuborsa
-            if ($text == '/start') {
-                switch ($user->state) {
-                    case 'await_phone':
-                        $this->start($chatId, $messageId, $user);
-                        break;
-                    case 'await_order':
-                        $this->savePhone($chatId, false, false, $messageId, $user);
-                        break;
-                    case 'await_order_quantity':
-                        $this->sendOrder($chatId, $messageId, false);
-                        break;
-                        //     case 'await_product':
-                        //         $this->saveRegion($chatId, $user->region_id, false, $messageId);
-                        //         break;
-                        //     case 'await_code':
-                        //         $this->Code($chatId, $text, $user, $messageId);
-                        //         break;
-                        //     case 'finish':
-                        //         $this->finish($chatId, $user, $messageId);
-                        //         break;
-                }
-            }
-
             if ($text != '/start') {
                 switch ($user->state) {
                     case 'await_phone':
@@ -81,12 +61,6 @@ class BotController extends Controller
                         $this->saveLocation($chatId, $text, $messageId, $user);
                         break;
                 }
-            }
-        } else {
-            switch ($text) {
-                case '/start':
-                    $this->start($chatId, $messageId, false);
-                    break;
             }
         }
     }
@@ -123,6 +97,9 @@ class BotController extends Controller
             ]);
         }
        if($user){
+        $user->update([
+            'await_phone'
+        ]);
         Order::create([
             'user_id'=>$user->id
         ]);
