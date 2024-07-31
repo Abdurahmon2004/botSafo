@@ -130,10 +130,7 @@ class BotController extends Controller
         ]);
 
         $message = "Xayrli kun Men sizning shaxsiy yordamchi botingizman. Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va toza suvga buyurtma berishingiz mumkin 💧 Yoki mahsulotlarimizni ko'ring📃 👇👇";
-        $btn = [
-            [['text' => 'Buyurtma berish 👈', 'callback_data' => 'order']],
-            [['text' => 'Biz haqimizda 👈', 'callback_data' => 'about']]
-        ];
+        $btn = [[['text' => 'Buyurtma berish 👈', 'callback_data' => 'order']]];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
