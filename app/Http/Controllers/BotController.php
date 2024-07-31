@@ -94,6 +94,9 @@ class BotController extends Controller
             $this->sendOrder($chatId, $messageId, $user);
         }
         if ($data == 'new_order') {
+            $user->update([
+                'state'=>'await_phone'
+            ]);
             $this->start($chatId, $messageId, $user);
         }
     }
