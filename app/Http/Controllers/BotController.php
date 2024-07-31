@@ -86,7 +86,7 @@ class BotController extends Controller
     public function handleCallbackQuery($chatId, $data, $messageId)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
-        if ($data == 'code') {
+        if ($data == 'order') {
             $this->sendOrder($chatId, $messageId, $user);
         }
     }
