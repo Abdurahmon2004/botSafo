@@ -20,7 +20,7 @@ class BotController extends Controller
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
             if($chatId){
-                if($chatId == -1002186487946){
+                if($chatId == -1004227934635){
                     return null;
                 }
             }
@@ -274,7 +274,7 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
     }
     public function sendMessageChanel($message){
         Telegram::sendMessage([
-            'chat_id'=>-1002186487946,
+            'chat_id'=>-1004227934635,
             'text'=>$message,
             'parse_mode'=>'html'
         ]);
