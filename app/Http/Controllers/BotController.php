@@ -105,7 +105,7 @@ class BotController extends Controller
                 'state' => 'await_phone',
             ]);
             Order::create([
-                'user_id'=>$user->id
+                'user_id'=>$userOrder->id
             ]);
             $text = "Assalomu alaykum uzuuun tanishuv teksti";
             $photo = InputFile::create(public_path('bot.jpg'));
@@ -115,6 +115,11 @@ class BotController extends Controller
                 'caption'=>$text
             ]);
         }
+       if($user){
+        Order::create([
+            'user_id'=>$user->id
+        ]);
+       }
         $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $message = 'Sizga bog\'lanish uchun
