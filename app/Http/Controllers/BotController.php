@@ -160,7 +160,6 @@ raqamingizni yuboring (masalan: 931234567):',
         $message = "Buyurma berish uchun 👇👇";
         $btn = [
             [['text' => 'Buyurtma berish 👈', 'callback_data' => 'order']],
-            [['text' => 'Biz haqimizda 👈', 'callback_data' => 'about']],
         ];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
