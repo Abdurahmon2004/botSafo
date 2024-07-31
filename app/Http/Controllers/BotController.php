@@ -159,10 +159,7 @@ raqamingizni yuboring (masalan: 931234567):',
         Telegram::sendMessage([
             'chat_id' => $chatId,
             'text' => 'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
-            'reply_markup' =>  json_encode([
-                // 'inline_keyboard' => $btn,
-                $remove  // This will clear any existing custom keyboard
-            ])
+            'reply_markup' =>  $remove
 
         ]);
 //         $message = "Men sizning shaxsiy yordamchi botingizman.
