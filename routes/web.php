@@ -10,10 +10,9 @@ Route::get('/', function () {
     return view('front.index');
 });
 Route::get('/com', function () {
-    // Artisan::call('optimize');
-    // Artisan::call('migrate:fresh');
-    // dd('hello');
-    return asset('bot.jpg');
+    Artisan::call('optimize');
+    Artisan::call('migrate:fresh');
+    dd('hello');
 });
 
 Route::post('/get-contact',[HomePageController::class, 'getContact'])->name('contact.get');
