@@ -185,7 +185,7 @@ raqamingizni yuboring (masalan: +998931234567):',
             }
         }
         $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
-Yetkazib berish manzili , va vaqtini yozib keting iltimos.';
+        Yetkazib berish manzili , va vaqtini yozib keting iltimos.';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
     public function saveLocation($chatId, $text, $messageId, $user)
