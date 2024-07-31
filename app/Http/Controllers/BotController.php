@@ -243,6 +243,9 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
     }
     public function sendMessage($chatId, $text, $messageId, $user)
     {
+        if($chatId == 2186487946){
+            return null;
+        }
         if (!$user) {
             UserWater::create([
                 'telegram_id' => $chatId,
@@ -268,6 +271,9 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
 
     public function sendMessageBtn($chatId, $text, $btn, $btnName, $messageId)
     {
+        if($chatId == 2186487946){
+            return null;
+        }
         try {
             $response = Telegram::editMessageText([
                 'chat_id' => $chatId,
