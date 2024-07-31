@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\UserWater;
+use Telegram\Bot\FileUpload\InputFile;
 use Telegram\Bot\Keyboard\Keyboard;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
@@ -84,9 +85,10 @@ public function handleMessage($chatId, $text, $messageId)
 
         try {
             $text = "Assalomu alaykum uzuuun tanishuv teksti";
+            $photo = InputFile::create(public_path('bot.jpg'));
             Telegram::sendPhoto([
                 'chat_id' => $chatId,
-                'photo' => asset('bot.jpg'),
+                'photo' => $photo,
                 'caption' => $text
             ]);
             $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
