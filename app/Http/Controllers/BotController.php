@@ -152,21 +152,26 @@ raqamingizni yuboring (masalan: 931234567):',
             }
         }
         $remove = Keyboard::make()->setRemoveKeyboard(true);
-        Telegram::sendMessage([
-            'chat_id' => $chatId,
-            'text' => 'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
-            'reply_markup' => $remove,
-        ]);
-        $message = "Men sizning shaxsiy yordamchi botingizman.
-Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va
-toza suvga buyurtma berishingiz mumkin 💧
-Yoki mahsulotlarimizni ko'ring📃 👇👇";
         $btn = [
             [['text' => 'Buyurtma berish 👈', 'callback_data' => 'order']],
             [['text' => 'Biz haqimizda 👈', 'callback_data' => 'about']],
         ];
-        $btnName = 'inline_keyboard';
-        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
+        Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
+            'reply_markup' =>  json_encode([
+                'inline_keyboard' => $btn,
+                'remove_keyboard' => true // This will clear any existing custom keyboard
+            ])
+
+        ]);
+//         $message = "Men sizning shaxsiy yordamchi botingizman.
+// Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va
+// toza suvga buyurtma berishingiz mumkin 💧
+// Yoki mahsulotlarimizni ko'ring📃 👇👇";
+
+//         $btnName = 'inline_keyboard';
+//         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
     public function sendOrder($chatId, $messageId, $user)
