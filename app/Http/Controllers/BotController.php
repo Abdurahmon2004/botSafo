@@ -98,7 +98,7 @@ class BotController extends Controller
         }
        if($user){
         $user->update([
-            'await_phone'
+            'state'=>'await_phone'
         ]);
         Order::create([
             'user_id'=>$user->id
