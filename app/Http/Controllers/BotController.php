@@ -197,12 +197,25 @@ Yoki mahsulotlarimizni ko'ring📃 👇👇";
             }
         }
         $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
-Yetkazib berish manzili , va vaqtini yozib keting iltimos.';
+Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
     public function saveLocation($chatId, $text, $messageId, $user)
     {
-
+        if($user){
+            $user->update([
+                'location'=>$text,
+                'state'=>'finish'
+            ]);
+        }
+        $message = 'Sizning ma\'lumotingiz muvaffaqiyatli saqlandi ✅
+Sizga operatorlarimiz aloqaga chiqishadi ☎️';
+        $btn = [
+            [['text' => 'Yana Buyurtma berish 👈', 'callback_data' => 'order']],
+            [['text' => 'Biz haqimizda 👈', 'callback_data' => 'about']],
+        ];
+        $btnName = 'inline_keyboard';
+        $this->sendMessageBtn($chatId, $message,$btn, $btnName, $messageId);
     }
     public function sendMessage($chatId, $text, $messageId, $user)
     {

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->string('state')->nullable();
             $table->string('social')->nullable();
+            $table->string('location')->nullable();
             $table->timestamps();
         });
     }
