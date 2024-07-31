@@ -19,11 +19,11 @@ class BotController extends Controller
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
-            // if($chatId){
-            //     if($chatId == -1004256706686){
-            //         return null;
-            //     }
-            // }
+            if($chatId){
+                if($chatId == 4256706686){
+                    return null;
+                }
+            }
             if ($chatId && $text) {
                 $this->handleMessage($chatId, $text, $messageId);
             }
@@ -274,7 +274,7 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
     }
     public function sendMessageChanel($message){
         Telegram::sendMessage([
-            'chat_id'=>-1004256706686,
+            'chat_id'=>4256706686,
             'text'=>$message,
             'parse_mode'=>'html'
         ]);
