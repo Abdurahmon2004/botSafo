@@ -157,7 +157,7 @@ raqamingizni yuboring (masalan: 931234567):',
             'text' => 'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
             'reply_markup' => $remove,
         ]);
-        $message = "";
+        $message = " ";
         $btn = [
             [['text' => 'Buyurtma berish 👈', 'callback_data' => 'order']],
             [['text' => 'Biz haqimizda 👈', 'callback_data' => 'about']],
