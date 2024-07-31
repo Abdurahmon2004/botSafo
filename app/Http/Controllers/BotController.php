@@ -19,11 +19,11 @@ class BotController extends Controller
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
-            if($chatId){
-                if($chatId == -1004256706686){
-                    return null;
-                }
-            }
+            // if($chatId){
+            //     if($chatId == -1004256706686){
+            //         return null;
+            //     }
+            // }
             if ($chatId && $text) {
                 $this->handleMessage($chatId, $text, $messageId);
             }
@@ -46,6 +46,12 @@ class BotController extends Controller
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($text == '/start') {
             $this->start($chatId, $messageId, $user);
+        }
+        if ($text == '/my_id') {
+           Telegram::sendMessage([
+            'chat_id'=>$chatId,
+            'text'=>'GroupId_'.$chatId
+           ]);
         }
         if ($user) {
             // botga qayta start bosib yuborsa
@@ -241,7 +247,7 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
                 'parse_mode' => 'html',
             ]);
         }
-        \Log::info('Telegram response: ' . json_encode($response));
+        // \Log::info('Telegram response: ' . json_encode($response));
     }
 
     public function sendMessageBtn($chatId, $text, $btn, $btnName, $messageId)
@@ -270,7 +276,7 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
                 ]),
             ]);
         }
-        \Log::info('Telegram response: ' . json_encode($response));
+        // \Log::info('Telegram response: ' . json_encode($response));
     }
     public function sendMessageChanel($message){
         try {
@@ -279,9 +285,9 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
                 'text' => $message,
                 'parse_mode' => 'html'
             ]);
-            \Log::info('Message sent to group: ' . json_encode($response));
+            // \Log::info('Message sent to group: ' . json_encode($response));
         } catch (\Exception $e) {
-            \Log::error('Error sending message to group: ' . $e->getMessage());
+            // \Log::error('Error sending message to group: ' . $e->getMessage());
         }
     }
 }
