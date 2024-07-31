@@ -18,7 +18,7 @@ class BotController extends Controller
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
-
+            \Log::info($data);
             if ($chatId && $text) {
                 $this->handleMessage($chatId, $text, $messageId);
             }
