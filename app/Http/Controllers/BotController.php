@@ -11,66 +11,81 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 class BotController extends Controller
 {
     public function webhook()
-{
-    $update = Telegram::getWebhookUpdates();
-    \Log::info('Webhook received: ' . json_encode($update));
+    {
+        $update = Telegram::getWebhookUpdates();
+        if ($update) {
+            $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
+            $text = $update['message']['text'] ?? null;
+            $data = $update['callback_query']['data'] ?? null;
+            $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
+            $contact = $update['message']['contact'] ?? null;
 
-    if ($update) {
-        $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
-        $text = $update['message']['text'] ?? null;
-        $data = $update['callback_query']['data'] ?? null;
-        $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
-        $contact = $update['message']['contact'] ?? null;
+            if ($chatId && $text) {
+                $this->handleMessage($chatId, $text, $messageId);
+            }
+            if ($chatId && $data) {
+                $this->handleCallbackQuery($chatId, $data, $messageId);
+            }
+            if ($chatId && $contact) {
 
-        \Log::info("chatId: $chatId, text: $text, data: $data, messageId: $messageId");
-
-        if ($chatId && $text) {
-            $this->handleMessage($chatId, $text, $messageId);
-        }
-        if ($chatId && $data) {
-            $this->handleCallbackQuery($chatId, $data, $messageId);
-        }
-        if ($chatId && $contact) {
-            $user = UserWater::where('state', 'await_phone')->first();
-            if ($user) {
-                $this->savePhone($chatId, $contact, false, $messageId, $user);
-            } else {
-                $this->handleMessage($chatId, '/start', $messageId);
+                $user = UserWater::where('state', 'await_phone')->first();
+                if ($user) {
+                    $this->savePhone($chatId, $contact, false, $messageId, $user);
+                } else {
+                    $this->handleMessage($chatId, '/start', $messageId);
+                }
             }
         }
     }
-}
-public function handleMessage($chatId, $text, $messageId)
-{
-    \Log::info("handleMessage called with chatId: $chatId, text: $text, messageId: $messageId");
+    public function handleMessage($chatId, $text, $messageId)
+    {
+        $user = UserWater::where('telegram_id', $chatId)->first();
+        if ($user) {
+            // botga qayta start bosib yuborsa
+            if ($text == '/start') {
+                switch ($user->state) {
+                    case 'await_phone':
+                        $this->start($chatId, $messageId, $user);
+                        break;
+                    case 'await_order':
+                        $this->savePhone($chatId, false, false, $messageId, $user);
+                        break;
+                    case 'await_order_quantity':
+                        $this->sendOrder($chatId, $messageId, false);
+                        break;
+                        //     case 'await_product':
+                        //         $this->saveRegion($chatId, $user->region_id, false, $messageId);
+                        //         break;
+                        //     case 'await_code':
+                        //         $this->Code($chatId, $text, $user, $messageId);
+                        //         break;
+                        //     case 'finish':
+                        //         $this->finish($chatId, $user, $messageId);
+                        //         break;
+                }
+            }
 
-    $user = UserWater::where('telegram_id', $chatId)->first();
-    if ($user) {
-        if ($text == '/start') {
-            \Log::info("Calling start method for chatId: $chatId");
-            $this->start($chatId, $messageId, $user);
-        }
-
-        if ($text != '/start') {
-            switch ($user->state) {
-                case 'await_phone':
-                    $this->savePhone($chatId, false, $text, $messageId, $user);
-                    break;
-                case 'await_order_quantity':
-                    $this->saveOrder($chatId, $text, $messageId, $user);
-                    break;
-                case 'await_location':
-                    $this->saveLocation($chatId, $text, $messageId, $user);
+            if ($text != '/start') {
+                switch ($user->state) {
+                    case 'await_phone':
+                        $this->savePhone($chatId, false, $text, $messageId, $user);
+                        break;
+                    case 'await_order_quantity':
+                        $this->saveOrder($chatId, $text, $messageId, $user);
+                        break;
+                    case 'await_location':
+                        $this->saveLocation($chatId, $text, $messageId, $user);
+                        break;
+                }
+            }
+        } else {
+            switch ($text) {
+                case '/start':
+                    $this->start($chatId, $messageId, false);
                     break;
             }
         }
-    } else {
-        if ($text == '/start') {
-            \Log::info("Calling start method for new user chatId: $chatId");
-            $this->start($chatId, $messageId, false);
-        }
     }
-}
 
     public function handleCallbackQuery($chatId, $data, $messageId)
     {
@@ -81,25 +96,19 @@ public function handleMessage($chatId, $text, $messageId)
     }
     public function start($chatId, $messageId, $user)
     {
-        \Log::info("start method called for chatId: $chatId, messageId: $messageId");
-
-        try {
-            $text = "Assalomu alaykum uzuuun tanishuv teksti";
-            $photo = InputFile::create(public_path('bot.jpg'));
-            Telegram::sendPhoto([
-                'chat_id' => $chatId,
-                'photo' => $photo,
-                'caption' => $text
-            ]);
-            $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
-            $btnName = 'keyboard';
-            $message = 'Suvga buyurtma berish uchun
-    "📱 Telefon raqamni yuborish" tugmasini bosing 👇
-    Yoki raqamingizni kiriting (masalan: +998931234567):';
-            $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
-        } catch (\Exception $e) {
-            \Log::error("Error in start method: " . $e->getMessage());
-        }
+        $text = "Assalomu alaykum uzuuun tanishuv teksti";
+        $photo = InputFile::create(public_path('bot.jpg'));
+        Telegram::sendPhoto([
+            'chat_id'=>$chatId,
+            'photo'=>$photo,
+            'caption'=>$text
+        ]);
+        $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
+        $btnName = 'keyboard';
+        $message = 'Suvga buyurtma berish uchun
+"📱 Telefon raqamni yuborish" tugmasini bosing 👇
+Yoki raqamingizni kiriting (masalan: +998931234567):';
+        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
     public function savePhone($chatId, $contact, $text, $messageId, $user)
