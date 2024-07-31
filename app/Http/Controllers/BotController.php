@@ -161,7 +161,7 @@ raqamingizni yuboring (masalan: 931234567):',
             'text' => 'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
             'reply_markup' =>  json_encode([
                 'inline_keyboard' => $btn,
-                'remove_keyboard' => true // This will clear any existing custom keyboard
+                $remove  // This will clear any existing custom keyboard
             ])
 
         ]);
