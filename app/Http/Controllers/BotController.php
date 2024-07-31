@@ -237,7 +237,8 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         ];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message,$btn, $btnName, $messageId);
-        $chanelMessage = "Tel: ".$user->phone."\n"."Miqdori: ".$user->order."dona";
+        $chanelMessage = "Tel: ".$user->phone."\n"."Miqdori: ".$user->order->quantity."dona"
+."\n"."Tavsif: ".$user->order->location;
         $this->sendMessageChanel($chanelMessage);
     }
     public function sendMessage($chatId, $text, $messageId, $user)
