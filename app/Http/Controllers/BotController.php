@@ -96,17 +96,17 @@ class BotController extends Controller
     public function start($chatId, $messageId, $user)
     {
         $text = "Assalomu alaykum uzuuun tanishuv teksti";
-        $this->sendMessage($chatId, $text, $messageId, $user);
+        Telegram::sendPhoto([
+            'chat_id'=>$chatId,
+            'photo'=>asset('bot.jpg'),
+            'caption'=>$text
+        ]);
         $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $message = 'Suvga buyurtma berish uchun
 "📱 Telefon raqamni yuborish" tugmasini bosing 👇
 Yoki raqamingizni kiriting (masalan: +998931234567):';
-        Telegram::sendPhoto([
-            'chat_id'=>$chatId,
-            'photo'=>'https://parvozairways.ru/public/bot.jpg',
-            'caption'=>$message
-        ]);
+        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
     public function savePhone($chatId, $contact, $text, $messageId, $user)
