@@ -102,7 +102,7 @@ class BotController extends Controller
         $message = 'Suvga buyurtma berish uchun
 "📱 Telefon raqamni yuborish" tugmasini bosing 👇
 Yoki raqamingizni kiriting (masalan: +998931234567):';
-        Telegram::sendMessage([
+        Telegram::sendPhoto([
             'chat_id'=>$chatId,
             'photo'=>asset('/bot.jpg'),
             'caption'=>$message
