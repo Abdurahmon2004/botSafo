@@ -87,13 +87,13 @@ class BotController extends Controller
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($data == 'code') {
-            $this->sendOrder($chatId,false, $user, $messageId);
+            $this->sendOrder($chatId,$data, $messageId);
         }
     }
     public function start($chatId,$messageId, $user)
     {
         $text = "Assalomu alaykum uzuuun tanishuv teksti";
-        $this->sendMessage($chatId, $text, $messageId, $user);
+        $this->sendMessage($chatId, $text, $messageId);
         $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $message = 'Suvga buyurtma berish uchun
@@ -148,61 +148,40 @@ raqamingizni yuboring (masalan: +998931234567):',
         Yoki mahsulotlarimizni ko'ring📃 👇👇";
         $btn = [
             [['text' => 'Buyurtma berish 👈', 'callback_data' =>'order']],
-            [['text' => 'Yana kod kiritish!', 'callback_data' => 'code']],
             [['text'=> 'Biz haqimizda 👈', 'callback_data'=>'about']]
         ];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
-    public function sendOrder($chatId, $text, $user, $messageId)
+    public function sendOrder($chatId, $data, $messageId)
     {
-        $message = "Himoya qatlami ostidagi 🎫 kodni kiriting";
+        $message = "Buyurtmangizni sonini kiriting 📃 👈";
         // $user->update([
         //     'state' => 'await_code',
         // ]);
-        $this->sendMessage($chatId, $message, $messageId, $user);
+        $this->sendMessage($chatId, $message, $messageId);
     }
-    public function sendMessage($chatId, $text, $messageId, $user)
+    public function sendMessage($chatId, $text, $messageId)
     {
+        $user = UserWater::where('telegram_id', $chatId)->first();
         if (!$user) {
             UserWater::create([
                 'telegram_id' => $chatId,
                 'state' => 'await_phone',
             ]);
         }
-        try {
-            $response = Telegram::editMessageText([
-                'chat_id' => $chatId,
-                'message_id' => $messageId,
-                'text' => $text,
-                'parse_mode' => 'html'
-            ]);
-        } catch (\Exception $e) {
             $response = Telegram::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $text,
                 'parse_mode' => 'html'
             ]);
-        }
         \Log::info('Telegram response: ' . json_encode($response));
     }
 
     public function sendMessageBtn($chatId, $text, $btn, $btnName, $messageId)
     {
-        try {
-            $response = Telegram::editMessageText([
-                'chat_id' => $chatId,
-                'message_id' => $messageId,
-                'text' => $text,
-                'parse_mode' => 'html',
-                'reply_markup' => json_encode([
-                    $btnName => $btn,
-                    'resize_keyboard' => true,
-                    'one_time_keyboard' => true,
-                ]),
-            ]);
-        } catch (\Exception $e) {
+
             $response = Telegram::sendMessage([
                 'chat_id' => $chatId,
                 'text' => $text,
@@ -213,7 +192,6 @@ raqamingizni yuboring (masalan: +998931234567):',
                     'one_time_keyboard' => true,
                 ]),
             ]);
-        }
         \Log::info('Telegram response: ' . json_encode($response));
     }
 }
