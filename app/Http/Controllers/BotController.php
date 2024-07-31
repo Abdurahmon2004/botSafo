@@ -102,8 +102,11 @@ class BotController extends Controller
         $message = 'Suvga buyurtma berish uchun
 "📱 Telefon raqamni yuborish" tugmasini bosing 👇
 Yoki raqamingizni kiriting (masalan: +998931234567):';
-        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
-
+        Telegram::sendMessage([
+            'chat_id'=>$chatId,
+            'photo'=>asset('').'/'.'bot.jpg',
+            'caption'=>$message
+        ]);
     }
 
     public function savePhone($chatId, $contact, $text, $messageId, $user)
