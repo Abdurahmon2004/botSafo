@@ -93,28 +93,33 @@ class BotController extends Controller
         if ($data == 'order') {
             $this->sendOrder($chatId, $messageId, $user);
         }
+        if ($data == 'new_order') {
+            $this->start($chatId, $messageId, $user);
+        }
     }
     public function start($chatId, $messageId, $user)
     {
-        $userId = UserWater::where('telegram_id')->first();
-        if(!$userId){
-            UserWater::create([
+        if(!$user){
+           $userOrder =  UserWater::create([
                 'telegram_id' => $chatId,
                 'state' => 'await_phone',
             ]);
+            Order::create([
+                'user_id'=>$user->id
+            ]);
+            $text = "Assalomu alaykum uzuuun tanishuv teksti";
+            $photo = InputFile::create(public_path('bot.jpg'));
+            Telegram::sendPhoto([
+                'chat_id'=>$chatId,
+                'photo'=>$photo,
+                'caption'=>$text
+            ]);
         }
-        $text = "Assalomu alaykum uzuuun tanishuv teksti";
-        $photo = InputFile::create(public_path('bot.jpg'));
-        Telegram::sendPhoto([
-            'chat_id'=>$chatId,
-            'photo'=>$photo,
-            'caption'=>$text
-        ]);
         $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
         $btnName = 'keyboard';
-        $message = 'Suvga buyurtma berish uchun
+        $message = 'Sizga bog\'lanish uchun
 "📱 Telefon raqamni yuborish" tugmasini bosing 👇
-Yoki raqamingizni kiriting (masalan: +998931234567):';
+Yoki raqamingizni kiriting (masalan: 931234567):';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
@@ -127,12 +132,15 @@ Yoki raqamingizni kiriting (masalan: +998931234567):';
                     'phone' => $phone,
                     'state' => 'await_order',
                 ]);
+                $user->order->update([
+                    'phone'=>$phone
+                ]);
             } else {
                 return Telegram::sendMessage([
                     'chat_id' => $chatId,
                     'text' => 'Sizning raqamingiz mahalliy raqam emas,
 📱 bog\'lanish mumkin bo\'lgan
-raqamingizni yuboring (masalan: +998931234567):',
+raqamingizni yuboring (masalan: 931234567):',
                 ]);
             }
         }
@@ -144,10 +152,13 @@ raqamingizni yuboring (masalan: +998931234567):',
                     'phone' => $text,
                     'state' => 'await_order',
                 ]);
+                $user->order->update([
+                    'phone'=>$phone
+                ]);
             } else {
                 return Telegram::sendMessage([
                     'chat_id' => $chatId,
-                    'text' => '📱 O`z telefon raqamingizni yuboring (masalan: +998931234567):',
+                    'text' => '📱 O`z telefon raqamingizni yuboring (masalan: 931234567):',
                 ]);
             }
         }
@@ -187,8 +198,7 @@ Yoki mahsulotlarimizni ko'ring📃 👇👇";
                 $user->update([
                     'state' => 'await_location',
                 ]);
-                Order::create([
-                    'user_id' => $user->id,
+                $user->order->update([
                     'quantity' => $text,
                 ]);
             } else {
@@ -204,18 +214,23 @@ Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
     {
         if($user){
             $user->update([
-                'location'=>$text,
                 'state'=>'finish'
+            ]);
+            $user->order->update([
+                'location'=>$text,
+                'status'=>true
             ]);
         }
         $message = 'Sizning ma\'lumotingiz muvaffaqiyatli saqlandi ✅
 Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         $btn = [
-            [['text' => 'Yana Buyurtma berish 👈', 'callback_data' => 'order']],
+            [['text' => 'Yana Buyurtma berish 👈', 'callback_data' => 'new_order']],
             [['text' => 'Biz haqimizda 👈', 'callback_data' => 'about']],
         ];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message,$btn, $btnName, $messageId);
+        $chanelMessage = "Tel: ".$user->phone."\n"."Miqdori: ".$user->order."dona";
+        $this->sendMessageChanel($chanelMessage);
     }
     public function sendMessage($chatId, $text, $messageId, $user)
     {
@@ -269,5 +284,12 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
             ]);
         }
         \Log::info('Telegram response: ' . json_encode($response));
+    }
+    public function sendMessageChanel($message){
+        Telegram::sendMessage([
+            'chat_id'=>-1001925986649,
+            'text'=>$message,
+            'parse_mode'=>'html'
+        ]);
     }
 }
