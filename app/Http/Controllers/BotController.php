@@ -96,6 +96,13 @@ class BotController extends Controller
     }
     public function start($chatId, $messageId, $user)
     {
+        $userId = UserWater::where('telegram_id')->first();
+        if(!$userId){
+            UserWater::create([
+                'telegram_id' => $chatId,
+                'state' => 'await_phone',
+            ]);
+        }
         $text = "Assalomu alaykum uzuuun tanishuv teksti";
         $photo = InputFile::create(public_path('bot.jpg'));
         Telegram::sendPhoto([
