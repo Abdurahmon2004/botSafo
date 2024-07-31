@@ -160,7 +160,7 @@ raqamingizni yuboring (masalan: 931234567):',
             'chat_id' => $chatId,
             'text' => 'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
             'reply_markup' =>  json_encode([
-                'inline_keyboard' => $btn,
+                // 'inline_keyboard' => $btn,
                 $remove  // This will clear any existing custom keyboard
             ])
 
