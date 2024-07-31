@@ -210,7 +210,6 @@ Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
 Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         $btn = [
             [['text' => 'Yana Buyurtma berish 👈', 'callback_data' => 'new_order']],
-            [['text' => 'Biz haqimizda 👈', 'callback_data' => 'about']],
         ];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message,$btn, $btnName, $messageId);
