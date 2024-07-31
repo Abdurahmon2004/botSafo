@@ -104,7 +104,7 @@ class BotController extends Controller
 Yoki raqamingizni kiriting (masalan: +998931234567):';
         Telegram::sendMessage([
             'chat_id'=>$chatId,
-            'photo'=>asset('').'/'.'bot.jpg',
+            'photo'=>asset('/bot.jpg'),
             'caption'=>$message
         ]);
     }
