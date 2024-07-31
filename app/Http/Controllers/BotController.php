@@ -296,7 +296,7 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
     }
     public function sendMessageChanel($message){
         Telegram::sendMessage([
-            'chat_id'=>-1001925986649,
+            'chat_id'=>2186487946,
             'text'=>$message,
             'parse_mode'=>'html'
         ]);
