@@ -20,7 +20,7 @@ class BotController extends Controller
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
             if($chatId){
-                if($chatId == 4256706686){
+                if($chatId == -1004256706686){
                     return null;
                 }
             }
@@ -273,10 +273,15 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         \Log::info('Telegram response: ' . json_encode($response));
     }
     public function sendMessageChanel($message){
-        Telegram::sendMessage([
-            'chat_id'=>4256706686,
-            'text'=>$message,
-            'parse_mode'=>'html'
-        ]);
+        try {
+            $response = Telegram::sendMessage([
+                'chat_id' => -1004256706686, // guruh yoki kanal ID
+                'text' => $message,
+                'parse_mode' => 'html'
+            ]);
+            \Log::info('Message sent to group: ' . json_encode($response));
+        } catch (\Exception $e) {
+            \Log::error('Error sending message to group: ' . $e->getMessage());
+        }
     }
 }
