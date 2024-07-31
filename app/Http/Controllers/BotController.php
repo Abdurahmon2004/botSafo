@@ -145,10 +145,10 @@ raqamingizni yuboring (masalan: +998931234567):',
             'text' => 'Telefon raqamingiz muvaffaqiyatli saqlandi ✅',
             'reply_markup' => $remove,
         ]);
-        $message = "Xayrli kun
-        Men sizning shaxsiy yordamchi botingizman.
-        Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va toza suvga buyurtma berishingiz mumkin 💧
-        Yoki mahsulotlarimizni ko'ring📃 👇👇";
+        $message = "Xayrli kun Men sizning shaxsiy yordamchi botingizman.
+Mening yordamim bilan siz o'zingizga juda ko'p yaxshi va
+toza suvga buyurtma berishingiz mumkin 💧
+Yoki mahsulotlarimizni ko'ring📃 👇👇";
         $btn = [
             [['text' => 'Buyurtma berish 👈', 'callback_data' => 'order']],
             [['text' => 'Biz haqimizda 👈', 'callback_data' => 'about']],
@@ -185,7 +185,7 @@ raqamingizni yuboring (masalan: +998931234567):',
             }
         }
         $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
-        Yetkazib berish manzili , va vaqtini yozib keting iltimos.';
+Yetkazib berish manzili , va vaqtini yozib keting iltimos.';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
     public function saveLocation($chatId, $text, $messageId, $user)
