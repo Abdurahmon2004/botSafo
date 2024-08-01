@@ -228,8 +228,7 @@ raqamingizni yuboring (masalan: +998931234567):',
                 return $this->sendMessage($chatId, $message, $messageId, $user);
             }
         }
-        $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
-        Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
+        $message = 'Kuryer uchun izox qoldiring ❗️';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
     public function saveLocation($chatId, $text, $messageId, $user)
