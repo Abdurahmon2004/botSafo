@@ -251,10 +251,10 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
         $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
-        . "\n" . "Tavsif: " . $user->order->location;
+        . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil pastda: 👇";
         $this->sendMessageChanel($chanelMessage);
         Telegram::sendLocation([
-            'chat_id'=>$chatId,
+            'chat_id'=>-4227934635,
             'latitude'=>$user->order->lat,
             'longitude'=>$user->order->long
         ]);
