@@ -141,13 +141,13 @@ Yoki raqamingizni kiriting (masalan: 931234567):';
                     'chat_id' => $chatId,
                     'text' => 'Sizning raqamingiz mahalliy raqam emas,
 📱 bog\'lanish mumkin bo\'lgan
-raqamingizni yuboring (masalan: 931234567):',
+raqamingizni yuboring (masalan: +998931234567):',
                 ]);
             }
         }
 
         if ($text) {
-            $text = "+998". substr($text, -8);
+            $text = "+" . substr($text, -12);
             if (preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13) {
                 $user->update([
                     'phone' => $text,
@@ -159,7 +159,7 @@ raqamingizni yuboring (masalan: 931234567):',
             } else {
                 return Telegram::sendMessage([
                     'chat_id' => $chatId,
-                    'text' => '📱 O`z telefon raqamingizni yuboring (masalan: 931234567):',
+                    'text' => '📱 O`z telefon raqamingizni yuboring (masalan: +998931234567):',
                 ]);
             }
         }
