@@ -208,8 +208,12 @@ raqamingizni yuboring (masalan: +998931234567):',
                 return $this->sendMessage($chatId, $message, $messageId, $user);
             }
         }
+        $btn = [
+            [['text' => '📍 Lokatsiya yuborish', 'request_location' => true]]
+        ];
+        $btnName = 'keyboard';
         $message = 'Iltimos telegram orqali lokatsiyangizni yuboring❗️';
-        $this->sendMessage($chatId, $message, $messageId, $user);
+        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
     public function location($chatId, $long, $lat, $messageId)
     {
