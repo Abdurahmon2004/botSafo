@@ -250,9 +250,14 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         ];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
-        $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"."\n"
-       ."Manzili: https://yandex.com/maps/?ll=".$user->order->long.",".$user->order->lat."&z=10". "\n" . "Tavsif: " . $user->order->location;
+        $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
+        . "\n" . "Tavsif: " . $user->order->location;
         $this->sendMessageChanel($chanelMessage);
+        Telegram::sendLocation([
+            'chat_id'=>$chatId,
+            'latitude'=>$user->order->lat,
+            'longitude'=>$user->order->long
+        ]);
     }
     public function sendMessage($chatId, $text, $messageId, $user)
     {
