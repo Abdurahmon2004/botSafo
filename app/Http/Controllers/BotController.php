@@ -15,7 +15,7 @@ class BotController extends Controller
         $update = Telegram::getWebhookUpdates();
         if ($update) {
             $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
-            $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? null;
+            $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? ""." ". $update['message']['chat']['last_name'] ?? $update['callback_query']['message']['chat']['last_name'] ?? "";
             $text = $update['message']['text'] ?? null;
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
