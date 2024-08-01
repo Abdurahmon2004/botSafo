@@ -15,7 +15,7 @@ class BotController extends Controller
         $update = Telegram::getWebhookUpdates();
         if ($update) {
             $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
-            $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? ""." ". $update['message']['chat']['last_name'] ?? $update['callback_query']['message']['chat']['last_name'] ?? "";
+            $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? null;
             $text = $update['message']['text'] ?? null;
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
@@ -175,7 +175,7 @@ raqamingizni yuboring (masalan: 931234567):',
                 'state' => 'await_order_quantity',
             ]);
         }
-        $message = 'Buyurtmangizni sonini kiriting! 📃 👇';
+        $message = 'Buyurtmangizni sonini kiriting! (masalan: 2, 3, 4, ...)📃 👇';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
 
@@ -183,12 +183,17 @@ raqamingizni yuboring (masalan: 931234567):',
     {
         if ($user) {
             if (is_numeric($text)) {
-                $user->update([
-                    'state' => 'await_location',
-                ]);
-                $user->order->update([
-                    'quantity' => $text,
-                ]);
+                if($text >=2){
+                    $user->update([
+                        'state' => 'await_location',
+                    ]);
+                    $user->order->update([
+                        'quantity' => $text,
+                    ]);
+                }else {
+                    $message = 'Eng kam buyurtma miqdori 2 dona';
+                    return $this->sendMessage($chatId, $message, $messageId, $user);
+                }
             } else {
                 $message = 'Buyurtma sonini faqat raqamlar orqali kiriting. (masalan: 2)';
                 return $this->sendMessage($chatId, $message, $messageId, $user);
