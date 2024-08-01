@@ -147,7 +147,7 @@ raqamingizni yuboring (masalan: 931234567):',
         }
 
         if ($text) {
-            $text = "+998" . substr($text, -9);
+            $text = "+998". substr($text, -9);
             if (preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13) {
                 $user->update([
                     'phone' => $text,
