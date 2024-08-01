@@ -183,9 +183,9 @@ raqamingizni yuboring (masalan: 931234567):',
     {
         if ($user) {
             if ($text == 0) {
-                $message = 'Eng kam buyurtma miqdori 2 dona';
+                $message = 'Eng kam buyurtma miqdori 0 dona';
                 return $this->sendMessage($chatId, $message, $messageId, $user);
-            } else if (is_numeric($text) && $text > 0) {
+            } else if (is_numeric($text)) {
                 if ($text >= 2) {
                     $user->update([
                         'state' => 'await_location',
