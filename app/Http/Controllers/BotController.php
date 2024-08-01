@@ -15,6 +15,7 @@ class BotController extends Controller
         $update = Telegram::getWebhookUpdates();
         if ($update) {
             $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
+            $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? null;
             $text = $update['message']['text'] ?? null;
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
@@ -25,10 +26,10 @@ class BotController extends Controller
                 }
             }
             if ($chatId && $text) {
-                $this->handleMessage($chatId, $text, $messageId);
+                $this->handleMessage($chatId, $text, $messageId, $name);
             }
             if ($chatId && $data) {
-                $this->handleCallbackQuery($chatId, $data, $messageId);
+                $this->handleCallbackQuery($chatId, $data, $messageId, $name);
             }
             if ($chatId && $contact) {
 
@@ -36,16 +37,16 @@ class BotController extends Controller
                 if ($user) {
                     $this->savePhone($chatId, $contact, false, $messageId, $user);
                 } else {
-                    $this->handleMessage($chatId, '/start', $messageId);
+                    $this->handleMessage($chatId, '/start', $messageId, $name);
                 }
             }
         }
     }
-    public function handleMessage($chatId, $text, $messageId)
+    public function handleMessage($chatId, $text, $messageId, $name)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($text == '/start') {
-            $this->start($chatId, $messageId, $user);
+            $this->start($chatId, $messageId, $user, $name);
         }
         if ($user) {
             // botga qayta start bosib yuborsa
@@ -65,7 +66,7 @@ class BotController extends Controller
         }
     }
 
-    public function handleCallbackQuery($chatId, $data, $messageId)
+    public function handleCallbackQuery($chatId, $data, $messageId, $name)
     {
         $user = UserWater::where('telegram_id', $chatId)->first();
         if ($data == 'order') {
@@ -75,14 +76,16 @@ class BotController extends Controller
             $user->update([
                 'state'=>'await_phone'
             ]);
-            $this->start($chatId, $messageId, $user);
+            $this->start($chatId, $messageId, $user, $name);
         }
     }
-    public function start($chatId, $messageId, $user)
+    public function start($chatId, $messageId, $user, $name)
     {
         if(!$user){
+
            $userOrder =  UserWater::create([
                 'telegram_id' => $chatId,
+                'name' => $name,
                 'state' => 'await_phone',
             ]);
             Order::create([
@@ -213,7 +216,7 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         ];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message,$btn, $btnName, $messageId);
-        $chanelMessage = "Tel: ".$user->phone."\n"."Miqdori: ".$user->order->quantity."dona"
+        $chanelMessage = "F.I.O: ".$user->name."\n"."Tel: ".$user->phone."\n"."Miqdori: ".$user->order->quantity."dona"
 ."\n"."Tavsif: ".$user->order->location;
         $this->sendMessageChanel($chanelMessage);
     }
