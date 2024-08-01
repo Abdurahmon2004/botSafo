@@ -18,7 +18,7 @@ class BotController extends Controller
             $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? null;
             $text = $update['message']['text'] ?? null;
             if($text == 0){
-                $text = 1;
+                $text = '0';
             }
             \Log::info('Kiritilgan miqdori:'.$text);
             $data = $update['callback_query']['data'] ?? null;
