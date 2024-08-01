@@ -20,12 +20,17 @@ class BotController extends Controller
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
-            if($chatId){
-                if($chatId == -4227934635){
+            $latitude = $update['message']['location']['latitude']??false;
+            $longitude = $update['message']['location']['longitude']??false;
+
+            if ($chatId) {
+                if ($chatId == -4227934635) {
                     return null;
                 }
             }
-
+            if($latitude && $longitude){
+                $this->location($chatId, $longitude, $latitude, $messageId);
+            }
             if ($chatId && $text) {
                 $this->handleMessage($chatId, $text, $messageId, $name);
             }
@@ -75,39 +80,39 @@ class BotController extends Controller
         }
         if ($data == 'new_order') {
             $user->update([
-                'state'=>'await_phone'
+                'state' => 'await_phone',
             ]);
             $this->start($chatId, $messageId, $user, $name);
         }
     }
     public function start($chatId, $messageId, $user, $name)
     {
-        if(!$user){
+        if (!$user) {
 
-           $userOrder =  UserWater::create([
+            $userOrder = UserWater::create([
                 'telegram_id' => $chatId,
                 'name' => $name,
                 'state' => 'await_phone',
             ]);
             Order::create([
-                'user_id'=>$userOrder->id
+                'user_id' => $userOrder->id,
             ]);
             $text = "Assalomu alaykum uzuuun tanishuv teksti";
             $photo = InputFile::create(public_path('bot.jpg'));
             Telegram::sendPhoto([
-                'chat_id'=>$chatId,
-                'photo'=>$photo,
-                'caption'=>$text
+                'chat_id' => $chatId,
+                'photo' => $photo,
+                'caption' => $text,
             ]);
         }
-       if($user){
-        $user->update([
-            'state'=>'await_phone'
-        ]);
-        Order::create([
-            'user_id'=>$user->id
-        ]);
-       }
+        if ($user) {
+            $user->update([
+                'state' => 'await_phone',
+            ]);
+            Order::create([
+                'user_id' => $user->id,
+            ]);
+        }
         $btn = [[['text' => '☎️Telefon raqamni yuborish📲', 'request_contact' => true]]];
         $btnName = 'keyboard';
         $message = 'Sizga bog\'lanish uchun
@@ -126,7 +131,7 @@ Yoki raqamingizni kiriting (masalan: 931234567):';
                     'state' => 'await_order',
                 ]);
                 $user->order->update([
-                    'phone'=>$phone
+                    'phone' => $phone,
                 ]);
             } else {
                 return Telegram::sendMessage([
@@ -146,7 +151,7 @@ raqamingizni yuboring (masalan: 931234567):',
                     'state' => 'await_order',
                 ]);
                 $user->order->update([
-                    'phone'=>$phone
+                    'phone' => $phone,
                 ]);
             } else {
                 return Telegram::sendMessage([
@@ -184,15 +189,14 @@ raqamingizni yuboring (masalan: 931234567):',
     {
         if ($user) {
             if (is_numeric($text)) {
-                if($text >=2){
+                if ($text >= 2) {
                     $user->update([
-                        'state' => 'await_location',
+                        'state' => 'location',
                     ]);
                     $user->order->update([
                         'quantity' => $text,
                     ]);
-                }
-                else {
+                } else {
                     $message = 'Eng kam buyurtma miqdori 2 dona';
                     return $this->sendMessage($chatId, $message, $messageId, $user);
                 }
@@ -201,19 +205,38 @@ raqamingizni yuboring (masalan: 931234567):',
                 return $this->sendMessage($chatId, $message, $messageId, $user);
             }
         }
+        $message = 'Iltimos telegram orqali lokatsiyangizni yuboring❗️';
+        $this->sendMessage($chatId, $message, $messageId, $user);
+    }
+    public function location($chatId, $long, $lat, $messageId){
+        $user = UserWater::where('telegram_id',$chatId)->first();
+        if($user){
+           if($long && $lat){
+            $user->order->update([
+                'long'=>$long,
+                'lat'=>$lat,
+            ]);
+            $user->update([
+                'state'=>'await_location'
+            ]);
+           }else{
+            $message = 'Iltimos telegram orqali lokatsiyangizni yuboring❗️';
+           return  $this->sendMessage($chatId, $message, $messageId, $user);
+           }
+        }
         $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
-Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
+        Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
     public function saveLocation($chatId, $text, $messageId, $user)
     {
-        if($user){
+        if ($user) {
             $user->update([
-                'state'=>'finish'
+                'state' => 'finish',
             ]);
             $user->order->update([
-                'location'=>$text,
-                'status'=>true
+                'location' => $text,
+                'status' => true,
             ]);
         }
         $message = 'Sizning ma\'lumotingiz muvaffaqiyatli saqlandi ✅
@@ -222,9 +245,9 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
             [['text' => 'Yana Buyurtma berish 👈', 'callback_data' => 'new_order']],
         ];
         $btnName = 'inline_keyboard';
-        $this->sendMessageBtn($chatId, $message,$btn, $btnName, $messageId);
-        $chanelMessage = "F.I.O: ".$user->name."\n"."Tel: ".$user->phone."\n"."Miqdori: ".$user->order->quantity."dona"
-."\n"."Tavsif: ".$user->order->location;
+        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
+        $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
+        . "\n" . "Tavsif: " . $user->order->location;
         $this->sendMessageChanel($chanelMessage);
     }
     public function sendMessage($chatId, $text, $messageId, $user)
@@ -280,11 +303,12 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         }
         \Log::info('Telegram response: ' . json_encode($response));
     }
-    public function sendMessageChanel($message){
+    public function sendMessageChanel($message)
+    {
         Telegram::sendMessage([
-            'chat_id'=>-4227934635,
-            'text'=>$message,
-            'parse_mode'=>'html'
+            'chat_id' => -4227934635,
+            'text' => $message,
+            'parse_mode' => 'html',
         ]);
     }
 }
