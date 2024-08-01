@@ -25,11 +25,6 @@ class BotController extends Controller
                     return null;
                 }
             }
-            if($text){
-                if($text == 0){
-                    $this->sendMessage($chatId,'nul',$messageId, $name);
-                }
-            }
             if ($chatId && $text) {
                 $this->handleMessage($chatId, $text, $messageId, $name);
             }
@@ -187,31 +182,28 @@ raqamingizni yuboring (masalan: 931234567):',
     public function saveOrder($chatId, $text, $messageId, $user)
     {
         if ($user) {
-            if($text == 0){
+            if ($text == 0) {
                 $message = 'Eng kam buyurtma miqdori 2 dona';
                 return $this->sendMessage($chatId, $message, $messageId, $user);
-            }
-            else if (is_numeric($text)) {
-                if($text >=2){
+            } else if (is_numeric($text)) {
+                if ($text >= 2) {
                     $user->update([
                         'state' => 'await_location',
                     ]);
                     $user->order->update([
                         'quantity' => $text,
                     ]);
-                }
-                else {
+                } else {
                     $message = 'Eng kam buyurtma miqdori 2 dona';
                     return $this->sendMessage($chatId, $message, $messageId, $user);
                 }
-            }
-            else {
+            } else {
                 $message = 'Buyurtma sonini faqat raqamlar orqali kiriting. (masalan: 2)';
                 return $this->sendMessage($chatId, $message, $messageId, $user);
             }
         }
         $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
-Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
+    Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
     public function saveLocation($chatId, $text, $messageId, $user)
