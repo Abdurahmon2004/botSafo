@@ -252,11 +252,13 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
         // $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
         // . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil pastda: 👇";
-        $yandexMapUrl = "https://yandex.com/maps/?ll={$user->order->long},{$user->order->lat}&z=12";
+        $yandexMapUrl = "https://yandex.com/maps/?rtext=~{$user->order->lat},{$user->order->long}&rtt=pd";
         $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
-        . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil: ".$yandexMapUrl;
-
-        $this->sendMessageChanel($chanelMessage);
+        . "\n" . "Tavsif: " . $user->order->location."\n";
+        $location = [
+            [['text' => 'Manzil olish', 'url' => $yandexMapUrl]],
+        ];
+        $this->sendMessageChanel($chanelMessage, $location);
         // Telegram::sendLocation([
         //     'chat_id'=>-4227934635,
         //     'latitude'=>$user->order->lat,
@@ -316,11 +318,14 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         }
         \Log::info('Telegram response: ' . json_encode($response));
     }
-    public function sendMessageChanel($message)
+    public function sendMessageChanel($message, $btn)
     {
         Telegram::sendMessage([
             'chat_id' => -4227934635,
             'text' => $message,
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $btn,
+            ]),
             'parse_mode' => 'html',
         ]);
     }
