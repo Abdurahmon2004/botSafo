@@ -224,7 +224,7 @@ raqamingizni yuboring (masalan: 931234567):',
                     'state' => 'await_location',
                 ]);
             } else {
-                $message = 'Iltimos telegram orqali lokatsiyangizni yuboring❗️';
+                $message = 'Iltimos telegram orqali lokatsiyangizni yuboring 📍 ❗️';
                 return $this->sendMessage($chatId, $message, $messageId, $user);
             }
         }
