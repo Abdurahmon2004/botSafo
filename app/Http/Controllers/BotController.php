@@ -253,10 +253,12 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         // $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
         // . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil pastda: 👇";
         $yandexMapUrl = "https://yandex.com/maps/?rtext=~{$user->order->lat},{$user->order->long}&rtt=pd";
+        $googleMapUrl = "https://www.google.com/maps/dir/?api=1&destination={$user->order->lat},{$user->order->long}";
         $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
         . "\n" . "Tavsif: " . $user->order->location."\n";
         $location = [
-            [['text' => 'Manzil olish', 'url' => $yandexMapUrl]],
+            [['text' => 'Manzil olish (yandex map)', 'url' => $yandexMapUrl]],
+            [['text' => 'Manzil olish (google map)', 'url' => $googleMapUrl]]
         ];
         $this->sendMessageChanel($chanelMessage, $location);
         // Telegram::sendLocation([
