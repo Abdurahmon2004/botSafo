@@ -17,7 +17,7 @@ class BotController extends Controller
             $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
             $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? null;
             $text = $update['message']['text'] ?? null;
-            /Log::info($text);
+            \Log::info($text);
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
