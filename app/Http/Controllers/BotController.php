@@ -190,7 +190,11 @@ raqamingizni yuboring (masalan: 931234567):',
                     $user->order->update([
                         'quantity' => $text,
                     ]);
-                }else {
+                }else if($text == 0){
+                    $message = 'Eng kam buyurtma miqdori 2 dona';
+                    return $this->sendMessage($chatId, $message, $messageId, $user);
+                }
+                else {
                     $message = 'Eng kam buyurtma miqdori 2 dona';
                     return $this->sendMessage($chatId, $message, $messageId, $user);
                 }
