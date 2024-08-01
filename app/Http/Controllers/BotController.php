@@ -232,8 +232,12 @@ raqamingizni yuboring (masalan: +998931234567):',
                 return $this->sendMessage($chatId, $message, $messageId, $user);
             }
         }
-        $message = 'Kuryer uchun izox qoldiring ❗️';
-        $this->sendMessage($chatId, $message, $messageId, $user);
+        $remove = Keyboard::make()->setRemoveKeyboard(true);
+        Telegram::sendMessage([
+            'chat_id' => $chatId,
+            'text' => 'Kuryer uchun izox qoldiring ❗️',
+            'reply_markup' => $remove,
+        ]);
     }
     public function saveLocation($chatId, $text, $messageId, $user)
     {
