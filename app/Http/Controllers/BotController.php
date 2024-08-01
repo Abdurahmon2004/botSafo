@@ -147,7 +147,7 @@ raqamingizni yuboring (masalan: 931234567):',
         }
 
         if ($text) {
-            $text = "+" . substr($text, -12);
+            $text = "+998" . substr($text, -9);
             if (preg_match("/^[+][0-9]+$/", $text) && strlen($text) == 13) {
                 $user->update([
                     'phone' => $text,
@@ -250,8 +250,6 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         ];
         $btnName = 'inline_keyboard';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
-        // $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
-        // . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil pastda: 👇";
         $yandexMapUrl = "https://yandex.com/maps/?rtext=~{$user->order->lat},{$user->order->long}&rtt=pd";
         $googleMapUrl = "https://www.google.com/maps/dir/?api=1&destination={$user->order->lat},{$user->order->long}";
         $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
