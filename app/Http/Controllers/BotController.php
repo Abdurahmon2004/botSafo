@@ -120,7 +120,7 @@ class BotController extends Controller
         $btnName = 'keyboard';
         $message = 'Sizga bog\'lanish uchun
 "📱 Telefon raqamni yuborish" tugmasini bosing 👇
-Yoki raqamingizni kiriting (masalan: 931234567):';
+Yoki raqamingizni kiriting (masalan:  +998931234567):';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
