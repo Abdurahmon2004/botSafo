@@ -182,7 +182,11 @@ raqamingizni yuboring (masalan: 931234567):',
     public function saveOrder($chatId, $text, $messageId, $user)
     {
         if ($user) {
-            if (is_numeric($text)) {
+            if($text ==+ '0'){
+                $message = 'Eng kam buyurtma miqdori 2 dona';
+                return $this->sendMessage($chatId, $message, $messageId, $user);
+            }
+            else if (is_numeric($text)) {
                 if($text >=2){
                     $user->update([
                         'state' => 'await_location',
@@ -195,10 +199,6 @@ raqamingizni yuboring (masalan: 931234567):',
                     $message = 'Eng kam buyurtma miqdori 2 dona';
                     return $this->sendMessage($chatId, $message, $messageId, $user);
                 }
-            }
-            else if($text == 0){
-                $message = 'Eng kam buyurtma miqdori 2 dona';
-                return $this->sendMessage($chatId, $message, $messageId, $user);
             }
             else {
                 $message = 'Buyurtma sonini faqat raqamlar orqali kiriting. (masalan: 2)';
