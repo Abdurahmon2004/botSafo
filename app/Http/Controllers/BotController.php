@@ -18,7 +18,10 @@ class BotController extends Controller
             $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? null;
             $text = $update['message']['text'] ?? null;
             if($text == 0){
-                $text = (int)$text;
+                return Telegram::sendMessage([
+                    'chat_id' => $chatId,
+                    'text' => 'Manotogri format',
+                ]);
             }
             \Log::info('Kiritilgan miqdori:'.$text);
             $data = $update['callback_query']['data'] ?? null;
