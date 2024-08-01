@@ -181,9 +181,10 @@ raqamingizni yuboring (masalan: 931234567):',
 
     public function saveOrder($chatId, $text, $messageId, $user)
     {
+        $text = intval($text);
         if ($user) {
             if ($text == 0) {
-                $message = 'Eng kam buyurtma miqdori 0 dona';
+                $message = 'Eng kam buyurtma miqdori 2 dona';
                 return $this->sendMessage($chatId, $message, $messageId, $user);
             } else if (is_numeric($text)) {
                 if ($text >= 2) {
