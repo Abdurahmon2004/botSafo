@@ -17,10 +17,6 @@ class BotController extends Controller
             $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
             $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? null;
             $text = $update['message']['text'] ?? null;
-            if($text == 0){
-               $text = 1;
-            }
-            \Log::info('Kiritilgan miqdori:'.$text);
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
@@ -185,35 +181,29 @@ raqamingizni yuboring (masalan: 931234567):',
 
     public function saveOrder($chatId, $text, $messageId, $user)
     {
-        \Log::info('Kiritilgan qiymat: ' . $text);
-
         if ($user) {
             if (is_numeric($text)) {
-                $quantity = intval($text);
-                \Log::info('Buyurtma miqdori: ' . $quantity);
-
-                if ($quantity >= 2) {
+                if($text >=2){
                     $user->update([
                         'state' => 'await_location',
                     ]);
                     $user->order->update([
-                        'quantity' => $quantity,
+                        'quantity' => $text,
                     ]);
-
-                    $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
-    Yetkazib berish manzili, va vaqtini yozib keting iltimos ✅';
-                    $this->sendMessage($chatId, $message, $messageId, $user);
-                } else {
+                }
+                else {
                     $message = 'Eng kam buyurtma miqdori 2 dona';
-                    $this->sendMessage($chatId, $message, $messageId, $user);
+                    return $this->sendMessage($chatId, $message, $messageId, $user);
                 }
             } else {
                 $message = 'Buyurtma sonini faqat raqamlar orqali kiriting. (masalan: 2)';
-                $this->sendMessage($chatId, $message, $messageId, $user);
+                return $this->sendMessage($chatId, $message, $messageId, $user);
             }
         }
+        $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
+Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
+        $this->sendMessage($chatId, $message, $messageId, $user);
     }
-
     public function saveLocation($chatId, $text, $messageId, $user)
     {
         if($user){
