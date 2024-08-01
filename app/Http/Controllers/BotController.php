@@ -254,7 +254,7 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         // . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil pastda: 👇";
 
         $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
-        . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil: <a href=\"yandexnavi://build_route_on_map?lat_to=".$user->order->lat."&lon_to=".$user->order->long."\">Navigate to Moscow</a>";
+        . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil: https://yandexnavi://build_route_on_map?lat_to=".$user->order->lat."&lon_to=".$user->order->long;
         $this->sendMessageChanel($chanelMessage);
         // Telegram::sendLocation([
         //     'chat_id'=>-4227934635,
