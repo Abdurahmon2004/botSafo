@@ -252,9 +252,10 @@ Sizga operatorlarimiz aloqaga chiqishadi ☎️';
         $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
         // $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
         // . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil pastda: 👇";
-
+        $yandexMapUrl = "https://yandex.com/maps/?ll={$user->order->long},{$user->order->lat}&z=12";
         $chanelMessage = "F.I.O: " . $user->name . "\n" . "Tel: " . $user->phone . "\n" . "Miqdori: " . $user->order->quantity . "dona"
-        . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil: https://yandexnavi://build_route_on_map?lat_to=".$user->order->lat."&lon_to=".$user->order->long;
+        . "\n" . "Tavsif: " . $user->order->location."\n"."Manzil: ".$yandexMapUrl;
+
         $this->sendMessageChanel($chanelMessage);
         // Telegram::sendLocation([
         //     'chat_id'=>-4227934635,
