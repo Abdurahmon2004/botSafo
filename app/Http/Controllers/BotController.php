@@ -20,15 +20,15 @@ class BotController extends Controller
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
-            $latitude = $update['message']['location']['latitude']??false;
-            $longitude = $update['message']['location']['longitude']??false;
+            $latitude = $update['message']['location']['latitude'] ?? false;
+            $longitude = $update['message']['location']['longitude'] ?? false;
 
             if ($chatId) {
                 if ($chatId == -4227934635) {
                     return null;
                 }
             }
-            if($latitude && $longitude){
+            if ($latitude && $longitude) {
                 $this->location($chatId, $longitude, $latitude, $messageId);
             }
             if ($chatId && $text) {
@@ -63,6 +63,9 @@ class BotController extends Controller
                         break;
                     case 'await_order_quantity':
                         $this->saveOrder($chatId, $text, $messageId, $user);
+                        break;
+                    case 'location':
+                        $this->location($chatId, false,false, $messageId);
                         break;
                     case 'await_location':
                         $this->saveLocation($chatId, $text, $messageId, $user);
@@ -208,21 +211,22 @@ raqamingizni yuboring (masalan: 931234567):',
         $message = 'Iltimos telegram orqali lokatsiyangizni yuboring❗️';
         $this->sendMessage($chatId, $message, $messageId, $user);
     }
-    public function location($chatId, $long, $lat, $messageId){
-        $user = UserWater::where('telegram_id',$chatId)->first();
-        if($user){
-           if($long && $lat){
-            $user->order->update([
-                'long'=>$long,
-                'lat'=>$lat,
-            ]);
-            $user->update([
-                'state'=>'await_location'
-            ]);
-           }else{
-            $message = 'Iltimos telegram orqali lokatsiyangizni yuboring❗️';
-           return  $this->sendMessage($chatId, $message, $messageId, $user);
-           }
+    public function location($chatId, $long, $lat, $messageId)
+    {
+        $user = UserWater::where('telegram_id', $chatId)->first();
+        if ($user) {
+            if ($long && $lat) {
+                $user->order->update([
+                    'long' => $long,
+                    'lat' => $lat,
+                ]);
+                $user->update([
+                    'state' => 'await_location',
+                ]);
+            } else {
+                $message = 'Iltimos telegram orqali lokatsiyangizni yuboring❗️';
+                return $this->sendMessage($chatId, $message, $messageId, $user);
+            }
         }
         $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
         Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
