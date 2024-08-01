@@ -181,32 +181,35 @@ raqamingizni yuboring (masalan: 931234567):',
 
     public function saveOrder($chatId, $text, $messageId, $user)
     {
-        $text = intval($text);
+        \Log::info('Kiritilgan qiymat: ' . $text);
+
         if ($user) {
-            if ($text == 0) {
-                $message = 'Eng kam buyurtma miqdori 2 dona';
-                return $this->sendMessage($chatId, $message, $messageId, $user);
-            } else if (is_numeric($text)) {
-                if ($text >= 2) {
+            if (is_numeric($text)) {
+                $quantity = intval($text);
+                \Log::info('Buyurtma miqdori: ' . $quantity);
+
+                if ($quantity >= 2) {
                     $user->update([
                         'state' => 'await_location',
                     ]);
                     $user->order->update([
-                        'quantity' => $text,
+                        'quantity' => $quantity,
                     ]);
+
+                    $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
+    Yetkazib berish manzili, va vaqtini yozib keting iltimos ✅';
+                    $this->sendMessage($chatId, $message, $messageId, $user);
                 } else {
                     $message = 'Eng kam buyurtma miqdori 2 dona';
-                    return $this->sendMessage($chatId, $message, $messageId, $user);
+                    $this->sendMessage($chatId, $message, $messageId, $user);
                 }
             } else {
                 $message = 'Buyurtma sonini faqat raqamlar orqali kiriting. (masalan: 2)';
-                return $this->sendMessage($chatId, $message, $messageId, $user);
+                $this->sendMessage($chatId, $message, $messageId, $user);
             }
         }
-        $message = 'Yetkazib berish qulay bo\'lishi uchun ❗️
-    Yetkazib berish manzili , va vaqtini yozib keting iltimos ✅';
-        $this->sendMessage($chatId, $message, $messageId, $user);
     }
+
     public function saveLocation($chatId, $text, $messageId, $user)
     {
         if($user){
