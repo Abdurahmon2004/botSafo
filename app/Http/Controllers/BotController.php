@@ -17,6 +17,9 @@ class BotController extends Controller
             $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
             $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? null;
             $text = $update['message']['text'] ?? null;
+            if($text == 0){
+                $text = 1;
+            }
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
@@ -25,6 +28,7 @@ class BotController extends Controller
                     return null;
                 }
             }
+
             if ($chatId && $text) {
                 $this->handleMessage($chatId, $text, $messageId, $name);
             }
