@@ -17,6 +17,9 @@ class BotController extends Controller
             $chatId = $update['message']['chat']['id'] ?? $update['callback_query']['message']['chat']['id'] ?? null;
             $name = $update['message']['chat']['first_name'] ?? $update['callback_query']['message']['chat']['first_name'] ?? null;
             $text = $update['message']['text'] ?? null;
+            if($text === 0){
+                $text = 'Notogri';
+            }
             $data = $update['callback_query']['data'] ?? null;
             $messageId = $update['message']['message_id'] ?? $update['callback_query']['message']['message_id'] ?? null;
             $contact = $update['message']['contact'] ?? null;
@@ -182,7 +185,7 @@ raqamingizni yuboring (masalan: 931234567):',
     public function saveOrder($chatId, $text, $messageId, $user)
     {
         if ($user) {
-            if(!$text){
+            if($text == 0){
                 $message = 'Eng kam buyurtma miqdori 2 dona';
                 return $this->sendMessage($chatId, $message, $messageId, $user);
             }
