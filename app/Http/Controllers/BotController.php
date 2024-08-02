@@ -184,8 +184,15 @@ raqamingizni yuboring (masalan: +998931234567):',
                 'state' => 'await_order_quantity',
             ]);
         }
-        $message = 'Buyurtmangizni sonini kiriting! (masalan: 2, 3, 4, ...)📃 👇';
-        $this->sendMessage($chatId, $message, $messageId, $user);
+        $message = '      Buyurtmangizni sonini kiriting!
+Yoki pastdagi tugmalar orqali bosing! (masalan: 2, 3, 4, ...)📃 👇';
+        $btn = [
+            [['text'=>1],['text'=>2]],
+            [['text'=>3],['text'=>4]],
+            [['text'=>5],['text'=>10]]
+        ];
+        $btnName = 'keyboard';
+        $this->sendMessageBtn($chatId, $message, $btn, $btnName, $messageId);
     }
 
     public function saveOrder($chatId, $text, $messageId, $user)
