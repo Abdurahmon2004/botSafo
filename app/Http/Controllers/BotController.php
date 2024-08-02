@@ -184,8 +184,8 @@ raqamingizni yuboring (masalan: +998931234567):',
                 'state' => 'await_order_quantity',
             ]);
         }
-        $message = '      Buyurtmangizni sonini kiriting!
-Yoki pastdagi tugmalar orqali bosing! (masalan: 2, 3, 4, ...)📃 👇';
+        $message = 'Buyurtmangizni sonini kiriting! masalan: 2, 3, 4, ...)
+Yoki pastdagi tugmalar orqali bosing! (📃 👇';
         $btn = [
             [['text'=>1],['text'=>2]],
             [['text'=>3],['text'=>4]],
